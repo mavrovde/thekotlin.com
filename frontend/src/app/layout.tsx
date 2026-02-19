@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import GoogleAdSense from "@/components/GoogleAdSense";
+import GoogleTagManager, { GoogleTagManagerNoScript } from "@/components/GoogleTagManager";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
@@ -27,6 +28,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <GoogleTagManager />
+        <GoogleTagManagerNoScript />
         <GoogleAnalytics />
         <GoogleAdSense />
         <Providers>
