@@ -1,0 +1,21 @@
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Build
+backend/build/
+frontend/.next/
+frontend/node_modules/
+
+# Gradle
+.gradle/
+backend/.gradle/
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
