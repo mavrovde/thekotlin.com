@@ -21,8 +21,8 @@ export default function SignInPage() {
         try {
             await login(username, password);
             router.push('/');
-        } catch (err: any) {
-            setError(err.message || 'Invalid credentials');
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Invalid credentials');
         } finally {
             setLoading(false);
         }

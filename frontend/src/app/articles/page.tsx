@@ -20,18 +20,21 @@ export default function ArticlesPage() {
     }, []);
 
     useEffect(() => {
-        setLoading(true);
-        const fetcher = searchQuery
-            ? api.searchArticles(searchQuery, page)
-            : api.getArticles(page, 12, categorySlug || undefined);
-
-        fetcher
-            .then(r => {
+        const fetchArticles = async () => {
+            setLoading(true);
+            try {
+                const r = searchQuery
+                    ? await api.searchArticles(searchQuery, page)
+                    : await api.getArticles(page, 12, categorySlug || undefined);
                 setArticles(r.content);
                 setTotalPages(r.totalPages);
-            })
-            .catch(() => { })
-            .finally(() => setLoading(false));
+            } catch {
+                // ignore
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchArticles();
     }, [page, categorySlug, searchQuery]);
 
     const formatDate = (d: string) =>

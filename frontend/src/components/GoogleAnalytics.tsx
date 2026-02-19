@@ -29,8 +29,8 @@ export default function GoogleAnalytics() {
 
 // Helper to track custom events from anywhere in the app
 export function trackEvent(action: string, category: string, label?: string, value?: number) {
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', action, {
+    if (typeof window !== 'undefined' && (window as unknown as Record<string, unknown>).gtag) {
+        ((window as unknown as Record<string, unknown>).gtag as (...args: unknown[]) => void)('event', action, {
             event_category: category,
             event_label: label,
             value: value,

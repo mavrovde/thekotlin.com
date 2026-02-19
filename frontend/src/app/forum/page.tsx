@@ -13,14 +13,19 @@ export default function ForumPage() {
     const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
-        setLoading(true);
-        api.getThreads(page)
-            .then(r => {
+        const fetchThreads = async () => {
+            setLoading(true);
+            try {
+                const r = await api.getThreads(page);
                 setThreads(r.content);
                 setTotalPages(r.totalPages);
-            })
-            .catch(() => { })
-            .finally(() => setLoading(false));
+            } catch {
+                // ignore
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchThreads();
     }, [page]);
 
     const formatDate = (d: string) => {

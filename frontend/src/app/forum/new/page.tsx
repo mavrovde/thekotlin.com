@@ -32,8 +32,8 @@ export default function NewThreadPage() {
         try {
             const thread = await api.createThread({ title, content, categoryId });
             router.push(`/forum/${thread.id}`);
-        } catch (err: any) {
-            setError(err.message || 'Failed to create thread');
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Failed to create thread');
         } finally {
             setSubmitting(false);
         }

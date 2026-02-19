@@ -20,19 +20,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const savedToken = localStorage.getItem('token');
-        if (savedToken) {
-            setToken(savedToken);
-            api.getMe()
-                .then(setUser)
-                .catch(() => {
+        const initAuth = async () => {
+            const savedToken = localStorage.getItem('token');
+            if (savedToken) {
+                setToken(savedToken);
+                try {
+                    const me = await api.getMe();
+                    setUser(me);
+                } catch {
                     localStorage.removeItem('token');
                     setToken(null);
-                })
-                .finally(() => setLoading(false));
-        } else {
+                }
+            }
             setLoading(false);
-        }
+        };
+        initAuth();
     }, []);
 
     const login = useCallback(async (username: string, password: string) => {

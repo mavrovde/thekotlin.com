@@ -23,8 +23,8 @@ export default function SignUpPage() {
         try {
             await register(username, email, password, displayName || undefined);
             router.push('/');
-        } catch (err: any) {
-            setError(err.message || 'Registration failed');
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Registration failed');
         } finally {
             setLoading(false);
         }
