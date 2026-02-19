@@ -19,8 +19,13 @@ export default function NewThreadPage() {
         api.getCategories().then(setCategories).catch(() => { });
     }, []);
 
+    useEffect(() => {
+        if (!user) {
+            router.push('/auth/signin');
+        }
+    }, [user, router]);
+
     if (!user) {
-        router.push('/auth/signin');
         return null;
     }
 

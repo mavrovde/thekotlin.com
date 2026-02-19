@@ -1,11 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { api, ArticleListResponse, CategoryResponse } from '@/lib/api';
 
 export default function ArticlesPage() {
+    return (
+        <Suspense fallback={<div className="loading-page"><div className="spinner" /></div>}>
+            <ArticlesContent />
+        </Suspense>
+    );
+}
+
+function ArticlesContent() {
     const searchParams = useSearchParams();
     const categorySlug = searchParams.get('category');
     const [articles, setArticles] = useState<ArticleListResponse[]>([]);
