@@ -1285,3 +1285,114 @@ textarea.input-field {
     align-items: center;
   }
 }
+
+/* ============================
+   Welcome Page
+   ============================ */
+.welcome-section-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: var(--space-xs);
+}
+
+.welcome-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin: 0 auto var(--space-2xl);
+  font-size: 1.05rem;
+}
+
+.welcome-features {
+  margin: var(--space-3xl) 0;
+}
+
+.welcome-feature-card {
+  text-align: center;
+  padding: var(--space-xl);
+}
+
+.welcome-feature-card h3 {
+  margin-bottom: var(--space-sm);
+}
+
+.welcome-feature-card p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.welcome-feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-md);
+}
+
+.welcome-why-kotlin {
+  margin: var(--space-3xl) 0;
+}
+
+.welcome-reasons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-lg);
+}
+
+.welcome-reason-card h3 {
+  margin-bottom: var(--space-md);
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.welcome-reason-card pre {
+  margin-bottom: var(--space-md);
+  font-size: 0.8rem;
+}
+
+.welcome-reason-card p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.welcome-cta {
+  margin: var(--space-3xl) 0;
+}
+
+.welcome-cta-card {
+  text-align: center;
+  padding: var(--space-3xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-cta-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-gradient-subtle);
+  pointer-events: none;
+}
+
+.welcome-cta-diamond {
+  margin: 0 auto var(--space-lg);
+}
+
+.welcome-cta-card h2 {
+  font-size: 2rem;
+  margin-bottom: var(--space-md);
+  position: relative;
+}
+
+.welcome-cta-card p {
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto var(--space-xl);
+  position: relative;
+}
+
+.welcome-cta-card .hero-actions {
+  position: relative;
+}
