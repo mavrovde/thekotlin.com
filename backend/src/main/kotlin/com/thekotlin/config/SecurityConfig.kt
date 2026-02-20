@@ -36,10 +36,12 @@ class SecurityConfig(
                     .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/tags/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/forum/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/news/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/stats").permitAll()
                     // Protected endpoints
                     .requestMatchers(HttpMethod.POST, "/api/articles/**").authenticated()
                     .requestMatchers(HttpMethod.POST, "/api/forum/**").authenticated()
+                    .requestMatchers(HttpMethod.POST, "/api/news/**").authenticated()
                     .requestMatchers("/api/users/me").authenticated()
                     .anyRequest().permitAll()
             }

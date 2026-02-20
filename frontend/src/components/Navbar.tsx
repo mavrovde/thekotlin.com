@@ -27,6 +27,11 @@ export default function Navbar() {
                         </Link>
                     </li>
                     <li>
+                        <Link href="/news" className={isActive('/news')}>
+                            News
+                        </Link>
+                    </li>
+                    <li>
                         <Link href="/articles" className={isActive('/articles')}>
                             Articles
                         </Link>

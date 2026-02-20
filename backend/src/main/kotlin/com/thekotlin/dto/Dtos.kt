@@ -129,6 +129,31 @@ data class CreatePostRequest(
     val parentId: Long? = null
 )
 
+// ==================== News ====================
+data class NewsResponse(
+    val id: Long,
+    val title: String,
+    val slug: String,
+    val summary: String?,
+    val content: String?,
+    val tag: String,
+    val tagColor: String,
+    val sourceUrl: String?,
+    val author: UserResponse?,
+    val publishedAt: LocalDateTime,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime
+)
+
+data class CreateNewsRequest(
+    val title: String,
+    val summary: String? = null,
+    val content: String? = null,
+    val tag: String = "General",
+    val tagColor: String? = null,
+    val sourceUrl: String? = null
+)
+
 // ==================== Common ====================
 data class PageResponse<T>(
     val content: List<T>,
@@ -142,5 +167,6 @@ data class StatsResponse(
     val articleCount: Long,
     val categoryCount: Long,
     val threadCount: Long,
-    val userCount: Long
+    val userCount: Long,
+    val newsCount: Long
 )

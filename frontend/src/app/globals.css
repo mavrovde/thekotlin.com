@@ -1396,3 +1396,116 @@ textarea.input-field {
 .welcome-cta-card .hero-actions {
   position: relative;
 }
+
+/* ============================
+   News Page
+   ============================ */
+.news-header {
+  text-align: center;
+  padding: var(--space-3xl) 0 var(--space-xl);
+}
+
+.news-header-diamond {
+  margin: 0 auto var(--space-md);
+}
+
+.news-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: var(--space-sm);
+}
+
+.news-header p {
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 1.05rem;
+}
+
+.news-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  max-width: 800px;
+  margin: 0 auto var(--space-3xl);
+}
+
+.news-card {
+  padding: var(--space-xl);
+  border-left: 3px solid var(--accent-primary);
+}
+
+.news-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.news-tag {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.news-date {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.news-card h2 {
+  font-size: 1.3rem;
+  margin-bottom: var(--space-sm);
+  font-weight: 700;
+}
+
+.news-card p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.news-read-more {
+  display: inline-block;
+  margin-top: var(--space-md);
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: color var(--transition-fast);
+}
+
+.news-read-more:hover {
+  color: var(--accent-secondary);
+}
+
+.news-cta {
+  margin: var(--space-3xl) 0;
+}
+
+.news-cta-card {
+  text-align: center;
+  padding: var(--space-2xl);
+}
+
+.news-cta-card h2 {
+  margin-bottom: var(--space-sm);
+}
+
+.news-cta-card p {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+}
+
+.welcome-news {
+  margin: var(--space-3xl) 0;
+}
+
+.welcome-news-timeline {
+  max-width: 100%;
+}

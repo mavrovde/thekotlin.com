@@ -115,11 +115,27 @@ export interface ForumThreadDetailResponse {
     createdAt: string;
 }
 
+export interface NewsResponse {
+    id: number;
+    title: string;
+    slug: string;
+    summary: string | null;
+    content: string | null;
+    tag: string;
+    tagColor: string;
+    sourceUrl: string | null;
+    author: UserResponse | null;
+    publishedAt: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export interface StatsResponse {
     articleCount: number;
     categoryCount: number;
     threadCount: number;
     userCount: number;
+    newsCount: number;
 }
 
 // ==================== API Functions ====================
@@ -171,6 +187,16 @@ export const api = {
 
     createPost: (threadId: number, data: { content: string; parentId?: number }) =>
         request<ForumPostResponse>(`/forum/threads/${threadId}/posts`, { method: 'POST', body: JSON.stringify(data) }),
+
+    // News
+    getNews: (page = 0, size = 20, tag?: string) => {
+        const params = new URLSearchParams({ page: String(page), size: String(size) });
+        if (tag) params.set('tag', tag);
+        return request<PageResponse<NewsResponse>>(`/news?${params}`);
+    },
+
+    getNewsItem: (slug: string) =>
+        request<NewsResponse>(`/news/${slug}`),
 
     // Stats
     getStats: () => request<StatsResponse>('/stats'),

@@ -33,7 +33,7 @@ services:
     build:
       context: ./frontend
       args:
-        NEXT_PUBLIC_API_URL: http://backend:8080
+        NEXT_PUBLIC_API_URL: http://localhost:8080/api
         NEXT_PUBLIC_GTM_ID: ${NEXT_PUBLIC_GTM_ID:-}
         NEXT_PUBLIC_GA_MEASUREMENT_ID: ${NEXT_PUBLIC_GA_MEASUREMENT_ID:-}
         NEXT_PUBLIC_ADSENSE_CLIENT_ID: ${NEXT_PUBLIC_ADSENSE_CLIENT_ID:-}
@@ -47,7 +47,7 @@ services:
     build:
       context: ./admin
       args:
-        NEXT_PUBLIC_API_URL: http://backend:8080
+        NEXT_PUBLIC_API_URL: http://localhost:8080/api
     container_name: thekotlin-admin
     ports:
       - "3001:3001"

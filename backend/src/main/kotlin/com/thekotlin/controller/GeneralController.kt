@@ -11,6 +11,7 @@ import com.thekotlin.repository.UserRepository
 import com.thekotlin.service.ArticleService
 import com.thekotlin.service.DtoMapper
 import com.thekotlin.service.ForumService
+import com.thekotlin.service.NewsService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
@@ -22,6 +23,7 @@ class GeneralController(
     private val tagRepository: TagRepository,
     private val articleService: ArticleService,
     private val forumService: ForumService,
+    private val newsService: NewsService,
     private val userRepository: UserRepository
 ) {
 
@@ -48,7 +50,8 @@ class GeneralController(
             articleCount = articleService.countPublished(),
             categoryCount = categoryRepository.count(),
             threadCount = forumService.countThreads(),
-            userCount = userRepository.count()
+            userCount = userRepository.count(),
+            newsCount = newsService.countPublished()
         )
     }
 }

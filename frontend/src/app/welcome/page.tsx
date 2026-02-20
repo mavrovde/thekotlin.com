@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import KotlinDiamond from '@/components/KotlinDiamond';
+import WelcomeNews from '@/components/WelcomeNews';
 
 export const metadata: Metadata = {
     title: 'Welcome to TheKotlin.com',
@@ -15,22 +16,22 @@ const features = [
     {
         icon: '📝',
         title: 'Expert Articles',
-        description: 'Deep-dive technical articles written by experienced Kotlin developers covering coroutines, Multiplatform, architecture patterns, and best practices.',
+        description: 'Deep-dive technical articles covering coroutines, Multiplatform, architecture patterns, and best practices.',
     },
     {
         icon: '💬',
         title: 'Community Forum',
-        description: 'Ask questions, share knowledge, and engage with fellow Kotlin enthusiasts. Get help from experts and contribute your expertise.',
+        description: 'Ask questions, share knowledge, and engage with fellow Kotlin enthusiasts.',
     },
     {
         icon: '📂',
         title: 'Curated Topics',
-        description: 'Browse articles and discussions organized by topics — from Android development and Spring Boot to Compose Multiplatform and Kotlin/Native.',
+        description: 'Browse articles organized by topics — Android, Spring Boot, Compose Multiplatform, and more.',
     },
     {
         icon: '🚀',
         title: 'Stay Current',
-        description: 'Keep up with the latest Kotlin features, releases, and ecosystem updates. We cover everything from Kotlin 2.x to KMP best practices.',
+        description: 'Keep up with the latest Kotlin features, releases, and ecosystem updates.',
     },
 ];
 
@@ -38,17 +39,17 @@ const kotlinReasons = [
     {
         title: 'Concise & Expressive',
         code: `data class User(\n    val name: String,\n    val email: String\n)`,
-        description: 'Write less boilerplate and more business logic. Kotlin\'s expressive syntax keeps your code clean and readable.',
+        description: 'Write less boilerplate and more business logic.',
     },
     {
         title: 'Null Safety',
         code: `val name: String? = null\nval length = name?.length ?: 0`,
-        description: 'Say goodbye to NullPointerExceptions. Kotlin\'s type system catches nullability issues at compile time.',
+        description: 'Kotlin\'s type system catches nullability issues at compile time.',
     },
     {
         title: 'Coroutines',
         code: `suspend fun loadData() {\n    val user = async { getUser() }\n    val posts = async { getPosts() }\n    show(user.await(), posts.await())\n}`,
-        description: 'Write asynchronous code that reads like synchronous. Structured concurrency makes concurrent programming simple and safe.',
+        description: 'Write asynchronous code that reads like synchronous.',
     },
 ];
 
@@ -76,6 +77,9 @@ export default function WelcomePage() {
                         </Link>
                     </div>
                 </section>
+
+                {/* Latest News — fetched from API */}
+                <WelcomeNews />
 
                 {/* Features */}
                 <section className="welcome-features">
