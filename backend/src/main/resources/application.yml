@@ -17,6 +17,7 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+    placeholder-replacement: false
 
 server:
   port: 8080
