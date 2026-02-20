@@ -108,6 +108,9 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
+            - name: Unit Tests
+              run: npm test
+
             - name: Build
               run: npm run build
               env:
