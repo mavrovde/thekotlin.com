@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import KotlinDiamond from './KotlinDiamond';
 
 export default function Footer() {
     return (
@@ -7,7 +8,7 @@ export default function Footer() {
                 <div className="footer-grid">
                     <div className="footer-brand">
                         <Link href="/" className="navbar-logo" style={{ marginBottom: '8px', display: 'inline-flex' }}>
-                            <span className="kotlin-mark">K</span>
+                            <KotlinDiamond size={32} className="kotlin-diamond" />
                             TheKotlin
                         </Link>
                         <p>
@@ -45,7 +46,7 @@ export default function Footer() {
 
                 <div className="footer-bottom">
                     <span>© {new Date().getFullYear()} TheKotlin.com — Built with ❤️ for Kotlin developers</span>
-                    <span>Powered by Next.js & Spring Boot</span>
+                    <span>Powered by Next.js &amp; Spring Boot</span>
                 </div>
             </div>
         </footer>

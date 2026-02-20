@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
 import { usePathname } from 'next/navigation';
+import KotlinDiamond from './KotlinDiamond';
 
 export default function Navbar() {
     const { user, logout } = useAuth();
@@ -15,7 +16,7 @@ export default function Navbar() {
         <nav className="navbar">
             <div className="navbar-inner">
                 <Link href="/" className="navbar-logo">
-                    <span className="kotlin-mark">K</span>
+                    <KotlinDiamond size={32} className="kotlin-diamond" />
                     TheKotlin
                 </Link>
 

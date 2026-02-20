@@ -43,5 +43,16 @@ services:
     depends_on:
       - backend
 
+  admin:
+    build:
+      context: ./admin
+      args:
+        NEXT_PUBLIC_API_URL: http://backend:8080
+    container_name: thekotlin-admin
+    ports:
+      - "3001:3001"
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:

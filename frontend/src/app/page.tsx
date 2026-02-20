@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { api, ArticleListResponse, CategoryResponse, StatsResponse } from '@/lib/api';
+import KotlinDiamond from '@/components/KotlinDiamond';
 
 export default function HomePage() {
   const [articles, setArticles] = useState<ArticleListResponse[]>([]);
@@ -23,6 +24,7 @@ export default function HomePage() {
       <div className="container">
         {/* Hero */}
         <section className="hero">
+          <KotlinDiamond size={120} className="hero-diamond" />
           <h1>
             Master <span className="gradient-text">Kotlin</span>
             <br />
@@ -39,6 +41,19 @@ export default function HomePage() {
             <Link href="/forum" className="btn btn-secondary">
               Join the Forum
             </Link>
+          </div>
+
+          {/* Code snippet showcase */}
+          <div className="hero-code">
+            <pre>
+              <code>
+                <span className="code-line-number">1</span><span className="code-keyword">suspend fun</span> <span className="code-function">fetchArticles</span>(): <span className="code-type">List</span>&lt;<span className="code-type">Article</span>&gt; = <span className="code-function">coroutineScope</span> &#123;{'\n'}
+                <span className="code-line-number">2</span>    <span className="code-keyword">val</span> featured = <span className="code-function">async</span> &#123; api.<span className="code-function">getFeatured</span>() &#125;{'\n'}
+                <span className="code-line-number">3</span>    <span className="code-keyword">val</span> latest = <span className="code-function">async</span> &#123; api.<span className="code-function">getLatest</span>() &#125;{'\n'}
+                <span className="code-line-number">4</span>    featured.<span className="code-function">await</span>() + latest.<span className="code-function">await</span>(){'\n'}
+                <span className="code-line-number">5</span>&#125;
+              </code>
+            </pre>
           </div>
         </section>
 
