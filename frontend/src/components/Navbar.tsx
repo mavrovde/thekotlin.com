@@ -22,6 +22,11 @@ export default function Navbar() {
 
                 <ul className="navbar-links">
                     <li>
+                        <Link href="/welcome" className={isActive('/welcome')}>
+                            Welcome
+                        </Link>
+                    </li>
+                    <li>
                         <Link href="/articles" className={isActive('/articles')}>
                             Articles
                         </Link>
