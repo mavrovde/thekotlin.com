@@ -9,6 +9,13 @@ plugins {
     jacoco
 }
 
+group = "com.thekotlin"
+version = "0.0.1-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
 java {
     sourceCompatibility = JavaVersion.VERSION_21
 }
