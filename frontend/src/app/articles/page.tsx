@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { api, ArticleListResponse, CategoryResponse } from '@/lib/api';
+import { AdUnit } from '@/components/GoogleAdSense';
 
 export default function ArticlesPage() {
     return (
@@ -99,6 +100,8 @@ function ArticlesContent() {
                         </Link>
                     ))}
                 </div>
+
+                <AdUnit slot="article-list-top" format="horizontal" />
 
                 {/* Loading */}
                 {loading ? (

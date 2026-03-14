@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { api, ForumThreadResponse } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
+import { AdUnit } from '@/components/GoogleAdSense';
 
 export default function ForumPage() {
     const { user } = useAuth();
@@ -56,6 +57,8 @@ export default function ForumPage() {
                         </Link>
                     )}
                 </div>
+
+                <AdUnit slot="forum-list-top" format="horizontal" />
 
                 {loading ? (
                     <div className="loading-page"><div className="spinner" /></div>

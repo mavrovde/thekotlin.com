@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { api, ForumThreadDetailResponse } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
+import { AdUnit } from '@/components/GoogleAdSense';
 
 export default function ThreadDetailPage() {
     const params = useParams();
@@ -84,13 +85,20 @@ export default function ThreadDetailPage() {
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
-                    {thread.posts.map(post => (
-                        <div key={post.id} className="post-item">
-                            <div className="post-header">
-                                <span className="post-author">{post.author.displayName || post.author.username}</span>
-                                <span className="post-date">{formatDate(post.createdAt)}</span>
+                    {thread.posts.map((post, index) => (
+                        <div key={post.id} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+                            <div className="post-item">
+                                <div className="post-header">
+                                    <span className="post-author">{post.author.displayName || post.author.username}</span>
+                                    <span className="post-date">{formatDate(post.createdAt)}</span>
+                                </div>
+                                <div className="post-body">{post.content}</div>
                             </div>
-                            <div className="post-body">{post.content}</div>
+                            
+                            {/* Show an ad unit right after the first post (the original question) */}
+                            {index === 0 && thread.posts.length > 1 && (
+                                <AdUnit slot="forum-detail-first-reply" format="horizontal" />
+                            )}
                         </div>
                     ))}
                 </div>

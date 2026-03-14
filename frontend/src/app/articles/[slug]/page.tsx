@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { api, ArticleResponse } from '@/lib/api';
+import { AdUnit } from '@/components/GoogleAdSense';
 
 export default function ArticleDetailPage() {
     const params = useParams();
@@ -113,6 +114,8 @@ export default function ArticleDetailPage() {
                         className="article-content"
                         dangerouslySetInnerHTML={{ __html: renderMarkdown(article.content) }}
                     />
+
+                    <AdUnit slot="article-detail-bottom" format="horizontal" style={{ marginTop: 'var(--space-2xl)' }} />
 
                     <div style={{ marginTop: 'var(--space-3xl)', paddingTop: 'var(--space-xl)', borderTop: '1px solid var(--border-color)' }}>
                         <Link href="/articles" className="btn btn-secondary">
