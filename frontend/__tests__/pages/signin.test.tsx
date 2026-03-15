@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 
 // Mock next/navigation
 const mockPush = jest.fn();
@@ -42,6 +42,10 @@ describe('SignInPage', () => {
         await waitFor(() => {
             expect(screen.getByText('Invalid credentials')).toBeInTheDocument();
         });
+
+        await waitFor(() => {
+            expect(screen.getByText('Sign In', { selector: 'button[type="submit"]' })).toBeEnabled();
+        });
     });
 
     it('calls login and redirects on success', async () => {
@@ -55,6 +59,10 @@ describe('SignInPage', () => {
         await waitFor(() => {
             expect(mockLogin).toHaveBeenCalledWith('user', 'pass');
             expect(mockPush).toHaveBeenCalledWith('/');
+        });
+
+        await waitFor(() => {
+            expect(screen.getByText('Sign In', { selector: 'button[type="submit"]' })).toBeEnabled();
         });
     });
 
@@ -72,7 +80,9 @@ describe('SignInPage', () => {
         });
 
         // Resolve to avoid pending promise warnings
-        resolveLogin!();
+        await act(async () => {
+            resolveLogin!();
+        });
     });
 
     it('renders OAuth buttons', () => {

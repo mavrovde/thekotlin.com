@@ -7,6 +7,15 @@ jest.mock('@/config', () => ({
     get config() { return mockConfig; }
 }));
 
+jest.mock('next/script', () => {
+    return {
+        __esModule: true,
+        default: (props: any) => {
+            return <script data-testid="next-script" {...props} />;
+        },
+    };
+});
+
 describe('GoogleAdSense', () => {
     beforeEach(() => {
         mockConfig.adsenseClientId = undefined;

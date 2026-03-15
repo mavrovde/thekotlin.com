@@ -157,6 +157,10 @@ describe('ForumPage', () => {
         await waitFor(() => {
             expect(mockGetThreads).toHaveBeenCalledWith(1);
         });
+
+        await waitFor(() => {
+            expect(document.querySelector('.loading-page')).not.toBeInTheDocument();
+        });
     });
 
     it('ignores fetch error gracefully', async () => {
