@@ -197,7 +197,12 @@ jobs:
               working-directory: .
 
             - name: Wait for backend
-              run: npx wait-on tcp:localhost:8080 -t 60000
+              run: |
+                for i in {1..60}; do
+                  curl -fs http://localhost:8080/api/stats > /dev/null && break
+                  echo "Waiting for backend to be healthy..."
+                  sleep 2
+                done
               working-directory: .
 
             - name: Build
