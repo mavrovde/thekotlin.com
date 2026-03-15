@@ -1,0 +1,71 @@
+name: Release & Deploy
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract tag name
+        id: extract_tag
+        run: echo "IMAGE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Set Docker Registry
+        run: |
+          # Convert repository name to lowercase
+          REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          echo "DOCKER_REGISTRY=${{ env.REGISTRY }}/$REPO" >> $GITHUB_ENV
+
+      - name: Build images
+        run: docker compose build
+
+      - name: Push images
+        run: docker compose push
+
+  deploy:
+    name: Deploy to Production
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy Placeholder
+        run: |
+          echo "Add your deployment steps here!"
+          echo "For example, you can use appleboy/ssh-action to SSH into your server,"
+          echo "pull the new Docker images,"
+          echo "and run docker compose up -d."
+          echo ""
+          echo "# Example SSH Deployment:"
+          echo "# - name: Deploy via SSH"
+          echo "#   uses: appleboy/ssh-action@master"
+          echo "#   with:"
+          echo "#     host: \${{ secrets.SERVER_HOST }}"
+          echo "#     username: \${{ secrets.SERVER_USER }}"
+          echo "#     key: \${{ secrets.SERVER_SSH_KEY }}"
+          echo "#     script: |"
+          echo "#       export IMAGE_TAG=\${GITHUB_REF#refs/tags/}"
+          echo "#       export DOCKER_REGISTRY=\${{ env.REGISTRY }}/\$(echo "\${{ github.repository }}" | tr '[:upper:]' '[:lower:]')"
+          echo "#       cd /path/to/your/app"
+          echo "#       docker compose pull"
+          echo "#       docker compose up -d"

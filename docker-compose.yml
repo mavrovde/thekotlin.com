@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: thekotlin
       POSTGRES_PASSWORD: thekotlin_dev
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -17,6 +17,7 @@ services:
       retries: 5
 
   backend:
+    image: ${DOCKER_REGISTRY:-ghcr.io/thekotlin}/backend:${IMAGE_TAG:-latest}
     build: ./backend
     container_name: thekotlin-backend
     ports:
@@ -30,6 +31,7 @@ services:
         condition: service_healthy
 
   frontend:
+    image: ${DOCKER_REGISTRY:-ghcr.io/thekotlin}/frontend:${IMAGE_TAG:-latest}
     build:
       context: ./frontend
       args:
@@ -44,6 +46,7 @@ services:
       - backend
 
   admin:
+    image: ${DOCKER_REGISTRY:-ghcr.io/thekotlin}/admin:${IMAGE_TAG:-latest}
     build:
       context: ./admin
       args:
