@@ -5,6 +5,7 @@
 
 # Build
 backend/build/
+backend/bin/
 frontend/.next/
 frontend/node_modules/
 admin/.next/

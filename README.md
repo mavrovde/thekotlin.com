@@ -2,6 +2,13 @@
 
 A professional knowledge database about Kotlin for software developers and architects.
 
+## Features
+
+- **Knowledge Base**: Articles, tutorials, and guides.
+- **Community Forum**: Discussion platform for developers and architects.
+- **SEO Optimized**: Server-side metadata generation for articles and forum threads.
+- **Monetization**: Integrated Google AdSense support.
+
 ## Tech Stack
 
 - **Frontend**: Next.js 14 (TypeScript, App Router)
@@ -18,16 +25,24 @@ A professional knowledge database about Kotlin for software developers and archi
 
 ### Quick Start
 
-```bash
-# Start PostgreSQL
-docker compose up -d postgres
+1. **Environment Variables**:
+   ```bash
+   cd frontend
+   cp .env.local.example .env.local
+   # Fill in your GA, GTM, and AdSense credentials if needed
+   ```
 
-# Start backend
-cd backend && ./gradlew bootRun
+2. **Start Services**:
+   ```bash
+   # Start PostgreSQL (maps port 5434 on host to 5432 in container)
+   docker compose up -d postgres
 
-# Start frontend (in another terminal)
-cd frontend && npm install && npm run dev
-```
+   # Start backend
+   cd backend && ./gradlew bootRun
+
+   # Start frontend (in another terminal)
+   cd frontend && npm install && npm run dev
+   ```
 
 Open [http://localhost:3000](http://localhost:3000)
 

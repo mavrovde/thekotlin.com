@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TheKotlin.com Frontend
+
+This is the Next.js 14 frontend application for TheKotlin.com, a professional knowledge database about Kotlin.
+
+## Features
+
+- **App Router**: Leveraging the latest Next.js 14 capabilities.
+- **Server-Side SEO Metadata**: Optimized titles, descriptions, and OpenGraph tags for articles and forum threads.
+- **Google AdSense Integration**: Internal ad units placed strategically across content pages (`<AdUnit />`).
+- **Google Analytics & Tag Manager**: Configured for performance and insights.
 
 ## Getting Started
 
-First, run the development server:
+1. Copy the example environment variables file and fill in your details:
+   ```bash
+   cp .env.local.example .env.local
+   ```
+   *Note: `NEXT_PUBLIC_ADSENSE_CLIENT_ID` is used to load your publisher ads. Leave it empty to disable ads in development.*
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. Run the development server:
+   ```bash
+   npm install
+   npm run dev
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `/app`: Contains all pages and routing components.
+  - `/articles`: Kotlin articles and tutorials.
+  - `/forum`: Community discussions.
+- `/components`: Shared UI components, including `GoogleAdSense` integration.
+- `/lib`: API clients and shared logic.
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The easiest way to deploy this Next.js app is to use the [Vercel Platform](https://vercel.com/new). Make sure to set your environment variables (`NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_ADSENSE_CLIENT_ID`, etc.) in the Vercel dashboard.

@@ -24,7 +24,7 @@ server:
 
 app:
   jwt:
-    secret: "TheKotlinComSuperSecretKeyForJWTTokensThatShouldBeAtLeast256BitsLong!!"
+    secret: ${JWT_SECRET:TheKotlinComSuperSecretKeyForJWTTokensThatShouldBeAtLeast256BitsLong!!}
     expiration-ms: 86400000 # 24 hours
 
   cors:
