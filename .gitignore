@@ -2,6 +2,8 @@
 .idea/
 *.iml
 .vscode/
+.air/
+.claude/
 
 # Build
 backend/build/

@@ -10,7 +10,7 @@ jest.mock('@/config', () => ({
 jest.mock('next/script', () => {
     return {
         __esModule: true,
-        default: (props: any) => {
+        default: (props: React.ScriptHTMLAttributes<HTMLScriptElement>) => {
             return <script data-testid="next-script" {...props} />;
         },
     };

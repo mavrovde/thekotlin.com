@@ -12,7 +12,10 @@ env:
     REGISTRY: ghcr.io
 
 jobs:
-    backend:
+    # ==========================================
+    # STAGE 1: Code Quality & Unit Tests
+    # ==========================================
+    backend-ci:
         name: Backend — Build & Test
         runs-on: ubuntu-latest
 
@@ -60,8 +63,8 @@ jobs:
                   SPRING_DATASOURCE_USERNAME: thekotlin
                   SPRING_DATASOURCE_PASSWORD: thekotlin_dev
 
-    frontend:
-        name: Frontend — Lint & Build
+    frontend-ci:
+        name: Frontend — Lint, Test & Build
         runs-on: ubuntu-latest
 
         defaults:
@@ -92,8 +95,8 @@ jobs:
               env:
                   NEXT_PUBLIC_API_URL: http://localhost:8080/api
 
-    admin:
-        name: Admin — Build
+    admin-ci:
+        name: Admin — Test & Build
         runs-on: ubuntu-latest
 
         defaults:
@@ -121,8 +124,12 @@ jobs:
               env:
                   NEXT_PUBLIC_API_URL: http://localhost:8080/api
 
-    e2e:
+    # ==========================================
+    # STAGE 2: Integration & E2E Tests
+    # ==========================================
+    e2e-tests:
         name: Frontend — E2E Tests
+        needs: [frontend-ci, backend-ci]
         runs-on: ubuntu-latest
 
         defaults:
@@ -178,43 +185,27 @@ jobs:
                   path: frontend/playwright-report/
                   retention-days: 30
 
-    docker:
-        name: Docker Compose — Build
+    # ==========================================
+    # STAGE 3: Docker Build & Publish
+    # ==========================================
+    docker-publish:
+        name: Docker — Build & Publish
+        needs: [backend-ci, frontend-ci, admin-ci, e2e-tests]
         runs-on: ubuntu-latest
-        needs: [backend, frontend, admin, e2e]
-        if: github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/v')
-
-        steps:
-            - uses: actions/checkout@v4
-
-            - name: Build all images
-              run: docker compose build
-
-    build-and-push:
-        name: Build and Push Docker Images
-        runs-on: ubuntu-latest
-        needs: [backend, frontend, admin, e2e]
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
         permissions:
             contents: read
             packages: write
 
         steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Log in to the Container registry
-              uses: docker/login-action@v3
-              with:
-                  registry: ${{ env.REGISTRY }}
-                  username: ${{ github.actor }}
-                  password: ${{ secrets.GITHUB_TOKEN }}
+            - uses: actions/checkout@v4
 
             - name: Extract tag name
+              if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
               id: extract_tag
               run: echo "IMAGE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
             - name: Set Docker Registry
+              if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
               run: |
                   # Convert repository name to lowercase
                   REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
@@ -223,12 +214,24 @@ jobs:
             - name: Build images
               run: docker compose build
 
+            - name: Log in to the Container registry
+              if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+              uses: docker/login-action@v3
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
             - name: Push images
+              if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
               run: docker compose push
 
+    # ==========================================
+    # STAGE 4: Deployment
+    # ==========================================
     deploy:
         name: Deploy to Production
-        needs: build-and-push
+        needs: docker-publish
         runs-on: ubuntu-latest
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
 
