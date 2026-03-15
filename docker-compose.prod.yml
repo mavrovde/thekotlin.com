@@ -2,14 +2,15 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: thekotlin-postgres
+    restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-thekotlin}
       POSTGRES_USER: ${POSTGRES_USER:-thekotlin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-thekotlin_dev}
-    ports:
-      - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-thekotlin}"]
       interval: 10s
@@ -18,10 +19,10 @@ services:
 
   backend:
     image: ${DOCKER_REGISTRY:-ghcr.io/thekotlin}/backend:${IMAGE_TAG:-latest}
-    build: ./backend
     container_name: thekotlin-backend
+    restart: always
     ports:
-      - "8080:8080"
+      - "28080:8080"
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/thekotlin}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-thekotlin}
@@ -32,38 +33,37 @@ services:
 
   frontend:
     image: ${DOCKER_REGISTRY:-ghcr.io/thekotlin}/frontend:${IMAGE_TAG:-latest}
-    build:
-      context: ./frontend
-      args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080/api}
-        NEXT_PUBLIC_GTM_ID: ${NEXT_PUBLIC_GTM_ID:-}
-        NEXT_PUBLIC_GA_MEASUREMENT_ID: ${NEXT_PUBLIC_GA_MEASUREMENT_ID:-}
-        NEXT_PUBLIC_ADSENSE_CLIENT_ID: ${NEXT_PUBLIC_ADSENSE_CLIENT_ID:-}
     container_name: thekotlin-frontend
+    restart: always
     ports:
       - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://localhost:20443/api}
+      NEXT_PUBLIC_GTM_ID: ${NEXT_PUBLIC_GTM_ID:-}
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: ${NEXT_PUBLIC_GA_MEASUREMENT_ID:-}
+      NEXT_PUBLIC_ADSENSE_CLIENT_ID: ${NEXT_PUBLIC_ADSENSE_CLIENT_ID:-}
     depends_on:
       - backend
 
   admin:
     image: ${DOCKER_REGISTRY:-ghcr.io/thekotlin}/admin:${IMAGE_TAG:-latest}
-    build:
-      context: ./admin
-      args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080/api}
     container_name: thekotlin-admin
+    restart: always
     ports:
       - "3001:3001"
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://localhost:20443/api}
     depends_on:
       - backend
 
   nginx:
     image: ${DOCKER_REGISTRY:-ghcr.io/thekotlin}/nginx:${IMAGE_TAG:-latest}
-    build:
-      context: ./nginx
     container_name: thekotlin-nginx
+    restart: always
     ports:
       - "20443:20443"
+    volumes:
+      - ./ssl:/etc/nginx/ssl:ro
     depends_on:
       - frontend
       - backend
