@@ -56,7 +56,7 @@ def release(part):
     run_cmd(["python3", "run_prod_smoke.py"])
     
     print(f"📦 Committing and tagging release v{new_version}...")
-    run_cmd(["git", "add", "build.gradle.kts", "backend/src/main/resources/db/migration/V2__news.sql", "manage.py", "release.py"])
+    run_cmd(["git", "add", "build.gradle.kts", "backend/src/main/resources/db/migration/V2__news.sql", "manage.py", "release.py", "run_prod_smoke.py", ".github/workflows/deployment.yml", "frontend/e2e/pages.spec.ts"])
     
     # Try to commit, but it's ok if there are no changes other than version
     result = run_cmd(["git", "commit", "-m", f"chore(release): v{new_version}"], check=False)

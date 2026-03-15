@@ -4,9 +4,9 @@ test.describe('Content Pages', () => {
     test('articles page renders with search bar', async ({ page }) => {
         await page.goto('/articles');
 
-        await expect(page.getByPlaceholder('Search articles...')).toBeVisible();
+        await expect(page.getByPlaceholder('Search articles...').first()).toBeVisible();
         // Should show "All Articles" heading or category-filtered heading
-        await expect(page.getByRole('heading', { name: /All Articles|Articles/i })).toBeVisible();
+        await expect(page.getByRole('heading', { name: /All Articles|Articles/i }).first()).toBeVisible();
     });
 
     test('news page renders', async ({ page }) => {

@@ -84,6 +84,14 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
+            - name: Cache Next.js resources
+              uses: actions/cache@v4
+              with:
+                  path: frontend/.next/cache
+                  key: ${{ runner.os }}-nextjs-${{ hashFiles('frontend/package-lock.json') }}-${{ hashFiles('frontend/src/**') }}
+                  restore-keys: |
+                      ${{ runner.os }}-nextjs-${{ hashFiles('frontend/package-lock.json') }}-
+
             - name: Lint
               run: npm run lint
 
@@ -115,6 +123,14 @@ jobs:
 
             - name: Install dependencies
               run: npm ci
+
+            - name: Cache Next.js resources
+              uses: actions/cache@v4
+              with:
+                  path: admin/.next/cache
+                  key: ${{ runner.os }}-nextjs-admin-${{ hashFiles('admin/package-lock.json') }}-${{ hashFiles('admin/src/**') }}
+                  restore-keys: |
+                      ${{ runner.os }}-nextjs-admin-${{ hashFiles('admin/package-lock.json') }}-
 
             - name: Unit Tests
               run: npm test
@@ -149,6 +165,14 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
+            - name: Cache Next.js resources
+              uses: actions/cache@v4
+              with:
+                  path: frontend/.next/cache
+                  key: ${{ runner.os }}-nextjs-e2e-${{ hashFiles('frontend/package-lock.json') }}-${{ hashFiles('frontend/src/**') }}
+                  restore-keys: |
+                      ${{ runner.os }}-nextjs-e2e-${{ hashFiles('frontend/package-lock.json') }}-
+
             - name: Get Playwright version
               id: playwright-version
               run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').packages['node_modules/@playwright/test'].version)")" >> $GITHUB_ENV
@@ -167,6 +191,14 @@ jobs:
             - name: Install Playwright system dependencies
               if: steps.playwright-cache.outputs.cache-hit == 'true'
               run: npx playwright install-deps
+
+            - name: Start backend
+              run: docker compose up --build -d backend postgres
+              working-directory: .
+
+            - name: Wait for backend
+              run: npx wait-on tcp:localhost:8080 -t 60000
+              working-directory: .
 
             - name: Build
               run: npm run build
@@ -211,8 +243,30 @@ jobs:
                   REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
                   echo "DOCKER_REGISTRY=${{ env.REGISTRY }}/$REPO" >> $GITHUB_ENV
 
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Cache Docker images
+              uses: actions/cache@v4
+              with:
+                  path: /tmp/.buildx-cache
+                  key: ${{ runner.os }}-docker-${{ github.sha }}
+                  restore-keys: |
+                      ${{ runner.os }}-docker-
+
+            - name: Pull images for cache
+              run: IMAGE_TAG=latest docker compose pull || true
+
             - name: Build images
               run: docker compose build
+              env:
+                  BUILDX_BAKE_OPTIONS: "--cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max --cache-from=type=local,src=/tmp/.buildx-cache"
+
+            - name: Move Docker cache
+              # Temporary fix to prevent cache from growing indefinitely
+              run: |
+                  rm -rf /tmp/.buildx-cache
+                  mv /tmp/.buildx-cache-new /tmp/.buildx-cache || true
 
             - name: Set up Node 24 for Smoke Tests
               uses: actions/setup-node@v4
