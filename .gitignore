@@ -26,3 +26,14 @@ backend/.gradle/
 # OS
 .DS_Store
 Thumbs.db
+
+# Playwright & E2E Testing
+frontend/playwright-report/
+frontend/test-results/
+frontend/blob-report/
+.playwright/
+
+# Local Development & Scripts
+ssl/
+nginx/ssl/
+gh_logs*.txt
