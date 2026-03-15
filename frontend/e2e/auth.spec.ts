@@ -7,13 +7,13 @@ test.describe('Auth Pages', () => {
         await expect(page.getByText('Welcome Back')).toBeVisible();
         await expect(page.getByPlaceholder('your-username')).toBeVisible();
         await expect(page.getByPlaceholder('••••••••')).toBeVisible();
-        await expect(page.getByRole('button', { name: /Sign In/i })).toBeVisible();
+        await expect(page.getByRole('button', { name: /Sign In/i }).first()).toBeVisible();
     });
 
     test('sign-up page renders form', async ({ page }) => {
         await page.goto('/auth/signup');
 
-        await expect(page.getByRole('button', { name: 'Create Account' })).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Create Account' }).first()).toBeVisible();
         await expect(page.getByPlaceholder('kotlin_dev')).toBeVisible();
     });
 
