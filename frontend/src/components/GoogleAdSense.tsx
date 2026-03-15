@@ -1,13 +1,14 @@
 'use client';
 
 import Script from 'next/script';
+import { config } from '@/config';
 
 /**
  * Loads the Google AdSense script globally.
  * Include this once in the layout. Individual ad units use <AdUnit />.
  */
 export default function GoogleAdSense() {
-    const ADSENSE_CLIENT_ID = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+    const ADSENSE_CLIENT_ID = config.adsenseClientId;
     if (!ADSENSE_CLIENT_ID) return null;
 
     return (
@@ -33,7 +34,7 @@ interface AdUnitProps {
 }
 
 export function AdUnit({ slot, format = 'auto', responsive = true, style }: AdUnitProps) {
-    const ADSENSE_CLIENT_ID = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+    const ADSENSE_CLIENT_ID = config.adsenseClientId;
     if (!ADSENSE_CLIENT_ID) return null;
 
     return (

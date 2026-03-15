@@ -2,20 +2,18 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import GoogleAnalytics, { trackEvent } from '@/components/GoogleAnalytics';
 
+jest.mock('@/config', () => ({
+    config: {
+        gaMeasurementId: '',
+    },
+}));
+
 describe('GoogleAnalytics', () => {
-    const originalEnv = process.env;
-
     beforeEach(() => {
-        jest.resetModules();
-        process.env = { ...originalEnv };
-    });
-
-    afterAll(() => {
-        process.env = originalEnv;
+        jest.clearAllMocks();
     });
 
     it('returns null if no GA_MEASUREMENT_ID', () => {
-        process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = '';
         const { container } = render(<GoogleAnalytics />);
         expect(container.firstChild).toBeNull();
     });

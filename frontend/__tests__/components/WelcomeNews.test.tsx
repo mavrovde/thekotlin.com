@@ -15,8 +15,8 @@ describe('WelcomeNews', () => {
     it('fetches and renders news cards', async () => {
         const mockNews = {
             content: [
-                { id: 1, title: 'Kotlin 2.2', slug: 'kotlin-22', summary: 'Big release', tag: 'Release', tagColor: '#7F52FF', sourceUrl: null, author: null, publishedAt: '2025-06-01T00:00:00', createdAt: '2025-06-01T00:00:00', updatedAt: '2025-06-01T00:00:00' },
-                { id: 2, title: 'Spring Boot 4', slug: 'spring-boot-4', summary: 'New features', tag: 'Framework', tagColor: '#6DB33F', sourceUrl: null, author: null, publishedAt: '2025-05-15T00:00:00', createdAt: '2025-05-15T00:00:00', updatedAt: '2025-05-15T00:00:00' },
+                { id: 1, title: 'Kotlin 2.2', slug: 'kotlin-22', summary: 'Big release', tag: 'Release', tagColor: '#7F52FF', sourceUrl: null, content: 'Content', author: null, publishedAt: '2025-06-01T00:00:00', createdAt: '2025-06-01T00:00:00', updatedAt: '2025-06-01T00:00:00' },
+                { id: 2, title: 'Spring Boot 4', slug: 'spring-boot-4', summary: 'New features', tag: 'Framework', tagColor: '#6DB33F', sourceUrl: null, content: 'Content', author: null, publishedAt: '2025-05-15T00:00:00', createdAt: '2025-05-15T00:00:00', updatedAt: '2025-05-15T00:00:00' },
             ],
             totalPages: 1,
             page: 0,
@@ -60,7 +60,7 @@ describe('WelcomeNews', () => {
     it('renders "View all news" link', async () => {
         mockApi.getNews.mockResolvedValueOnce({
             content: [
-                { id: 1, title: 'Test News', slug: 'test', summary: 'Sum', tag: 'Test', tagColor: '#000', sourceUrl: null, author: null, publishedAt: '2025-06-01T00:00:00', createdAt: '2025-06-01T00:00:00', updatedAt: '2025-06-01T00:00:00' },
+                { id: 1, title: 'Test News', slug: 'test', summary: 'Sum', tag: 'Test', tagColor: '#000', sourceUrl: null, content: 'Content', author: null, publishedAt: '2025-06-01T00:00:00', createdAt: '2025-06-01T00:00:00', updatedAt: '2025-06-01T00:00:00' },
             ],
             totalPages: 1, page: 0, size: 4, totalElements: 1,
         });

@@ -1,18 +1,18 @@
 import sitemap from '@/app/sitemap';
 
+jest.mock('@/config', () => ({
+    config: {
+        siteUrl: 'https://thekotlin.com',
+        apiUrl: 'http://localhost:8080/api'
+    }
+}));
+
 const mockFetch = jest.fn();
 global.fetch = mockFetch;
 
 describe('sitemap', () => {
-    const originalEnv = process.env;
-
     beforeEach(() => {
         jest.clearAllMocks();
-        process.env = { ...originalEnv };
-    });
-
-    afterAll(() => {
-        process.env = originalEnv;
     });
 
     it('generates static routes and skips dynamic routes if fetch fails', async () => {
@@ -69,13 +69,5 @@ describe('sitemap', () => {
         expect(urls).toContain('https://thekotlin.com/articles/article-1');
         expect(urls).toContain('https://thekotlin.com/articles/article-2');
         expect(urls).toContain('https://thekotlin.com/articles?category=category-1');
-    });
-
-    it('uses standard URL when NEXT_PUBLIC_SITE_URL is not provided', async () => {
-        delete process.env.NEXT_PUBLIC_SITE_URL;
-        mockFetch.mockRejectedValue(new Error('Fetch failed')); // skip dynamics
-
-        const result = await sitemap();
-        expect(result[0].url).toBe('https://thekotlin.com');
     });
 });

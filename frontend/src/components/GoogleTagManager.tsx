@@ -1,8 +1,9 @@
 'use client';
 
 import Script from 'next/script';
+import { config } from '@/config';
 
-const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
+const GTM_ID = config.gtmId;
 
 /**
  * Google Tag Manager — head script.

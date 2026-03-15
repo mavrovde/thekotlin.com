@@ -11,20 +11,18 @@ jest.mock('next/script', () => {
     };
 });
 
-describe('GoogleTagManager', () => {
-    const originalEnv = process.env;
+const mockConfig = { gtmId: '' as string | undefined };
+jest.mock('@/config', () => ({
+    get config() { return mockConfig; }
+}));
 
+describe('GoogleTagManager', () => {
     beforeEach(() => {
         jest.resetModules();
-        process.env = { ...originalEnv };
-    });
-
-    afterAll(() => {
-        process.env = originalEnv;
+        mockConfig.gtmId = undefined;
     });
 
     it('renders null when GTM_ID is not set', () => {
-        delete process.env.NEXT_PUBLIC_GTM_ID;
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { default: GoogleTagManager, GoogleTagManagerNoScript } = require('@/components/GoogleTagManager');
         
@@ -36,7 +34,7 @@ describe('GoogleTagManager', () => {
     });
 
     it('renders script when GTM_ID is set', () => {
-        process.env.NEXT_PUBLIC_GTM_ID = 'GTM-TEST';
+        mockConfig.gtmId = 'GTM-TEST';
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { default: GoogleTagManager } = require('@/components/GoogleTagManager');
 
@@ -45,7 +43,7 @@ describe('GoogleTagManager', () => {
     });
 
     it('renders noscript when GTM_ID is set', () => {
-        process.env.NEXT_PUBLIC_GTM_ID = 'GTM-TEST';
+        mockConfig.gtmId = 'GTM-TEST';
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { GoogleTagManagerNoScript } = require('@/components/GoogleTagManager');
         

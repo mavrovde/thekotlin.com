@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
+import { config } from '@/config';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://thekotlin.com';
+const siteUrl = config.siteUrl;
 
 export default function robots(): MetadataRoute.Robots {
     return {
