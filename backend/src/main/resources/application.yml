@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5434/thekotlin
-    username: thekotlin
-    password: thekotlin_dev
+    url: ${DB_URL:jdbc:postgresql://localhost:5434/thekotlin}
+    username: ${DB_USERNAME:thekotlin}
+    password: ${DB_PASSWORD:thekotlin_dev}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -20,12 +20,12 @@ spring:
     placeholder-replacement: false
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 app:
   jwt:
     secret: ${JWT_SECRET:TheKotlinComSuperSecretKeyForJWTTokensThatShouldBeAtLeast256BitsLong!!}
-    expiration-ms: 86400000 # 24 hours
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24 hours
 
   cors:
-    allowed-origins: http://localhost:3000
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:3001}

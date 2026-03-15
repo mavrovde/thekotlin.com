@@ -3,15 +3,15 @@ services:
     image: postgres:16-alpine
     container_name: thekotlin-postgres
     environment:
-      POSTGRES_DB: thekotlin
-      POSTGRES_USER: thekotlin
-      POSTGRES_PASSWORD: thekotlin_dev
+      POSTGRES_DB: ${POSTGRES_DB:-thekotlin}
+      POSTGRES_USER: ${POSTGRES_USER:-thekotlin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-thekotlin_dev}
     ports:
       - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U thekotlin"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-thekotlin}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -23,9 +23,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/thekotlin
-      SPRING_DATASOURCE_USERNAME: thekotlin
-      SPRING_DATASOURCE_PASSWORD: thekotlin_dev
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/thekotlin}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-thekotlin}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-thekotlin_dev}
     depends_on:
       postgres:
         condition: service_healthy

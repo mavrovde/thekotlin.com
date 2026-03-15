@@ -24,14 +24,14 @@ describe('GoogleAnalytics', () => {
 describe('trackEvent', () => {
     it('calls window.gtag if it exists', () => {
         const gtagMock = jest.fn();
-        (window as any).gtag = gtagMock;
+        (window as unknown as { gtag: jest.Mock }).gtag = gtagMock;
         trackEvent('action', 'category', 'label', 1);
         expect(gtagMock).toHaveBeenCalledWith('event', 'action', {
             event_category: 'category',
             event_label: 'label',
             value: 1,
         });
-        delete (window as any).gtag;
+        delete (window as unknown as { gtag?: jest.Mock }).gtag;
     });
 
     it('does nothing if window.gtag does not exist', () => {

@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next';
+import { config } from '../config';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://thekotlin.com';
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+const siteUrl = config.siteUrl;
+const apiUrl = config.apiUrl;
 
 interface ArticleSlug {
     slug: string;

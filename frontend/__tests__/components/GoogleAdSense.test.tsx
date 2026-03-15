@@ -6,7 +6,6 @@ describe('GoogleAdSense', () => {
     const originalEnv = process.env;
 
     beforeEach(() => {
-        jest.resetModules();
         process.env = { ...originalEnv };
     });
 
@@ -25,7 +24,6 @@ describe('AdUnit', () => {
     const originalEnv = process.env;
 
     beforeEach(() => {
-        jest.resetModules();
         process.env = { ...originalEnv };
     });
 

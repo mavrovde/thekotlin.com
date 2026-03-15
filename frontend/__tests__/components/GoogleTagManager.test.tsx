@@ -4,6 +4,7 @@ import { renderToString } from 'react-dom/server';
 jest.mock('next/script', () => {
     return {
         __esModule: true,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         default: (props: any) => {
             return <script data-testid="mocked-next-script" dangerouslySetInnerHTML={{ __html: props.children }} />;
         },
@@ -24,6 +25,7 @@ describe('GoogleTagManager', () => {
 
     it('renders null when GTM_ID is not set', () => {
         delete process.env.NEXT_PUBLIC_GTM_ID;
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { default: GoogleTagManager, GoogleTagManagerNoScript } = require('@/components/GoogleTagManager');
         
         const { container } = render(<GoogleTagManager />);
@@ -35,6 +37,7 @@ describe('GoogleTagManager', () => {
 
     it('renders script when GTM_ID is set', () => {
         process.env.NEXT_PUBLIC_GTM_ID = 'GTM-TEST';
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { default: GoogleTagManager } = require('@/components/GoogleTagManager');
 
         const { getByTestId } = render(<GoogleTagManager />);
@@ -43,6 +46,7 @@ describe('GoogleTagManager', () => {
 
     it('renders noscript when GTM_ID is set', () => {
         process.env.NEXT_PUBLIC_GTM_ID = 'GTM-TEST';
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { GoogleTagManagerNoScript } = require('@/components/GoogleTagManager');
         
         const html = renderToString(<GoogleTagManagerNoScript />);
