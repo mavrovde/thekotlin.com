@@ -6,8 +6,9 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import GoogleAdSense from "@/components/GoogleAdSense";
 import GoogleTagManager, { GoogleTagManagerNoScript } from "@/components/GoogleTagManager";
 import { Providers } from "./providers";
+import { config } from "@/config";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://thekotlin.com";
+const siteUrl = config.siteUrl;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
