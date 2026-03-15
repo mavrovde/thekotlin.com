@@ -31,3 +31,9 @@ This is a monorepo consisting of:
 - Add comments only for complex or non-obvious logic (focus on "why", not "what").
 - Do not introduce new third-party libraries without first checking if existing libraries in `package.json` or `build.gradle.kts` can achieve the goal.
 - Never expose or commit secrets, API keys, or sensitive environment variables. Always reference `.env` files.
+
+## Release Process
+- To release, the project must be built with all tests green.
+- Bump the version across the project.
+- Documentation and release notes must be updated accordingly to reflect changed and added features.
+- Commit and push the changes with a meaningful message.
