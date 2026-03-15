@@ -12,13 +12,13 @@ test.describe('Content Pages', () => {
     test('news page renders', async ({ page }) => {
         await page.goto('/news');
 
-        await expect(page.getByText('Kotlin News')).toBeVisible();
+        await expect(page.getByText('Kotlin News').first()).toBeVisible();
     });
 
     test('forum page renders', async ({ page }) => {
         await page.goto('/forum');
 
-        await expect(page.getByText('Community Forum')).toBeVisible();
+        await expect(page.getByText('Community Forum').first()).toBeVisible();
     });
 
     test('categories page renders', async ({ page }) => {

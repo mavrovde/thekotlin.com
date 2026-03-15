@@ -7,14 +7,14 @@ test.describe('Auth Pages', () => {
         await expect(page.getByText('Welcome Back')).toBeVisible();
         await expect(page.getByPlaceholder('your-username')).toBeVisible();
         await expect(page.getByPlaceholder('••••••••')).toBeVisible();
-        await expect(page.getByRole('button', { name: /Sign In/i })).toBeVisible();
+        await expect(page.locator('form button[type="submit"]', { hasText: /Sign In/i })).toBeVisible();
     });
 
     test('sign-up page renders form', async ({ page }) => {
         await page.goto('/auth/signup');
 
-        await expect(page.getByText('Create Account')).toBeVisible();
-        await expect(page.getByPlaceholder('your-username')).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Create Account' })).toBeVisible();
+        await expect(page.getByPlaceholder('kotlin_dev')).toBeVisible();
     });
 
     test('OAuth buttons are present on sign-in', async ({ page }) => {
@@ -27,7 +27,7 @@ test.describe('Auth Pages', () => {
     test('sign-in has link to sign-up', async ({ page }) => {
         await page.goto('/auth/signin');
 
-        const signUpLink = page.getByRole('link', { name: 'Sign Up' });
+        const signUpLink = page.getByRole('link', { name: 'Sign Up' }).first();
         await expect(signUpLink).toBeVisible();
         await signUpLink.click();
         await page.waitForURL('**/auth/signup');

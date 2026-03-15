@@ -11,14 +11,14 @@ test.describe('Navigation', () => {
         await page.goto('/welcome');
 
         // Check all nav links exist
-        await expect(page.getByRole('link', { name: 'Welcome' })).toBeVisible();
-        await expect(page.getByRole('link', { name: 'News' })).toBeVisible();
-        await expect(page.getByRole('link', { name: 'Articles' })).toBeVisible();
-        await expect(page.getByRole('link', { name: 'Forum' })).toBeVisible();
-        await expect(page.getByRole('link', { name: 'Topics' })).toBeVisible();
+        await expect(page.getByRole('link', { name: 'Welcome' }).first()).toBeVisible();
+        await expect(page.getByRole('link', { name: 'News' }).first()).toBeVisible();
+        await expect(page.getByRole('link', { name: 'Articles' }).first()).toBeVisible();
+        await expect(page.getByRole('link', { name: 'Forum' }).first()).toBeVisible();
+        await expect(page.getByRole('link', { name: 'Topics' }).first()).toBeVisible();
 
         // Navigate to News
-        await page.getByRole('link', { name: 'News' }).click();
+        await page.getByRole('link', { name: 'News' }).first().click();
         await page.waitForURL('**/news');
         expect(page.url()).toContain('/news');
     });
