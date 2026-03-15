@@ -37,3 +37,4 @@ This is a monorepo consisting of:
 - Bump the version across the project.
 - Documentation and release notes must be updated accordingly to reflect changed and added features.
 - Commit and push the changes with a meaningful message.
+- To trigger deployment to production via GitHub Actions, create and push a tag matching the pattern `v*.*.*` (e.g., `git tag v1.0.0` and `git push origin v1.0.0`).
