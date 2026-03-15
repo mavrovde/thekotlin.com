@@ -40,7 +40,7 @@ def run_tests():
     original_cwd = os.getcwd()
     os.chdir("frontend")
     try:
-        run_cmd(["npx", "playwright", "test", "e2e/prod-smoke.spec.ts"])
+        run_cmd(["npx", "playwright", "test", "smoke/prod-smoke.spec.ts"])
     finally:
         os.chdir(original_cwd)
 
