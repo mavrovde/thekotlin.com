@@ -262,8 +262,23 @@ jobs:
             - name: Pull images for cache
               run: IMAGE_TAG=latest docker compose pull || true
 
-            - name: Build images
-              run: docker compose build
+            - name: Build Backend Image
+              run: docker compose build backend
+              env:
+                  BUILDX_BAKE_OPTIONS: "--cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max --cache-from=type=local,src=/tmp/.buildx-cache"
+
+            - name: Build Frontend Image
+              run: docker compose build frontend
+              env:
+                  BUILDX_BAKE_OPTIONS: "--cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max --cache-from=type=local,src=/tmp/.buildx-cache"
+
+            - name: Build Admin Image
+              run: docker compose build admin
+              env:
+                  BUILDX_BAKE_OPTIONS: "--cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max --cache-from=type=local,src=/tmp/.buildx-cache"
+
+            - name: Build Nginx SSL Proxy Image
+              run: docker compose build nginx
               env:
                   BUILDX_BAKE_OPTIONS: "--cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max --cache-from=type=local,src=/tmp/.buildx-cache"
 
@@ -288,8 +303,26 @@ jobs:
               run: npx playwright install --with-deps
               working-directory: frontend
 
-            - name: Run Production Smoke Tests
-              run: python3 run_prod_smoke.py
+            - name: Generate Local SSL Certs for Testing
+              run: |
+                mkdir -p ssl
+                openssl req -x509 -newkey rsa:4096 -keyout ssl/key.pem -out ssl/cert.pem -sha256 -days 365 -nodes -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
+
+            - name: Start Production Stack for Smoke Tests
+              run: |
+                export IMAGE_TAG=${{ env.IMAGE_TAG || 'latest' }}
+                docker compose -f docker-compose.prod.yml up -d
+
+            - name: Wait for Stack Initialization
+              run: sleep 15
+
+            - name: Execute Playwright Production Smoke Tests
+              run: npx playwright test e2e/prod-smoke.spec.ts
+              working-directory: frontend
+
+            - name: Stop Production Stack
+              if: always()
+              run: docker compose -f docker-compose.prod.yml down
 
             - name: Log in to the Container registry
               if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
@@ -299,9 +332,21 @@ jobs:
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Push images
+            - name: Publish Backend Image
               if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-              run: docker compose push
+              run: docker compose push backend
+              
+            - name: Publish Frontend Image
+              if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+              run: docker compose push frontend
+              
+            - name: Publish Admin Image
+              if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+              run: docker compose push admin
+              
+            - name: Publish Nginx Image
+              if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+              run: docker compose push nginx
 
     # ==========================================
     # STAGE 4: Deployment
@@ -313,23 +358,41 @@ jobs:
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
 
         steps:
-            - name: Deploy Placeholder
-              run: |
-                  echo "Add your deployment steps here!"
-                  echo "For example, you can use appleboy/ssh-action to SSH into your server,"
-                  echo "pull the new Docker images,"
-                  echo "and run docker compose up -d."
+            - name: Deploy via SSH
+              uses: appleboy/ssh-action@master
+              with:
+                host: ${{ secrets.SERVER_HOST }}
+                username: ${{ secrets.SERVER_USER }}
+                key: ${{ secrets.SERVER_SSH_KEY }}
+                script: |
+                  echo "========================================="
+                  echo "🚀 Starting Production Deployment..."
+                  echo "========================================="
+                  
+                  export IMAGE_TAG=${GITHUB_REF#refs/tags/}
+                  export DOCKER_REGISTRY=${{ env.REGISTRY }}/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+                  echo "📌 Target Image Tag: $IMAGE_TAG"
+                  echo "📌 Target Container Registry: $DOCKER_REGISTRY"
+                  
                   echo ""
-                  echo "# Example SSH Deployment:"
-                  echo "# - name: Deploy via SSH"
-                  echo "#   uses: appleboy/ssh-action@master"
-                  echo "#   with:"
-                  echo "#     host: \${{ secrets.SERVER_HOST }}"
-                  echo "#     username: \${{ secrets.SERVER_USER }}"
-                  echo "#     key: \${{ secrets.SERVER_SSH_KEY }}"
-                  echo "#     script: |"
-                  echo "#       export IMAGE_TAG=\${GITHUB_REF#refs/tags/}"
-                  echo "#       export DOCKER_REGISTRY=\${{ env.REGISTRY }}/\$(echo \"\${{ github.repository }}\" | tr '[:upper:]' '[:lower:]')"
-                  echo "#       cd /path/to/your/app"
-                  echo "#       docker compose pull"
-                  echo "#       docker compose up -d"
+                  echo "📂 Navigating to application directory..."
+                  cd /path/to/your/app
+                  pwd
+                  
+                  echo ""
+                  echo "📝 Updating environment variables..."
+                  sed -i "s/^IMAGE_TAG=.*/IMAGE_TAG=$IMAGE_TAG/" .env
+                  grep "IMAGE_TAG" .env || echo "Warning: IMAGE_TAG not found in .env"
+                  
+                  echo ""
+                  echo "📥 Pulling latest Docker images..."
+                  docker compose -f docker-compose.prod.yml pull
+                  
+                  echo ""
+                  echo "🔄 Restarting production services..."
+                  docker compose -f docker-compose.prod.yml up -d
+                  
+                  echo ""
+                  echo "========================================="
+                  echo "✅ Deployment successful!"
+                  echo "========================================="

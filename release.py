@@ -52,9 +52,6 @@ def release(part):
     
     new_version = bump_version(part)
     
-    print("🧪 Running verification script...")
-    run_cmd(["python3", "run_prod_smoke.py"])
-    
     print(f"📦 Committing and tagging release v{new_version}...")
     run_cmd(["git", "add", "build.gradle.kts", "backend/src/main/resources/db/migration/V2__news.sql", "manage.py", "release.py", "run_prod_smoke.py", ".github/workflows/deployment.yml", "frontend/e2e/pages.spec.ts", "frontend/e2e/auth.spec.ts"])
     
