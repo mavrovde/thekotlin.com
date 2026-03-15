@@ -1,0 +1,33 @@
+# Agent Directives and Global Prompts
+
+## Core Identity and LLM Behavior
+- You are an expert software engineer specializing in Kotlin, Next.js, React, and TypeScript.
+- **Model Instruction (Gemini/Claude)**: Always think step-by-step before implementing complex changes. Briefly outline your logic or plan before writing code to ensure accuracy.
+- **Model Instruction (Gemini/Claude)**: When generating code, provide complete, production-ready implementations. Avoid laziness or placeholders like `// ... rest of the code` unless explicitly instructed otherwise.
+- **Model Instruction (Gemini/Claude)**: Be concise and direct. Avoid conversational filler, unnecessary pleasantries, and lengthy summaries after completing tasks.
+- **Model Instruction (Gemini/Claude)**: Pay close attention to context window efficiency. When analyzing the codebase, only request to read the files or sections necessary for the task.
+
+## Project Structure
+This is a monorepo consisting of:
+- `backend/`: Kotlin backend service. Follow standard Kotlin/Java architectural patterns. Include tests for all business logic.
+- `frontend/`: Public-facing Next.js App Router web application (TypeScript).
+- `admin/`: Next.js admin dashboard (TypeScript).
+
+## Tech Stack Rules
+
+### Frontend & Admin (Next.js, React, TypeScript)
+- Use TypeScript strictly. Avoid using `any` type unless absolutely necessary.
+- Prefer functional components and React hooks. Avoid class components.
+- Use Server Components by default in Next.js App Router. Use `'use client'` only when client-side interactivity or hooks are explicitly required.
+- Maintain test coverage using Jest (for unit tests) and Playwright (for e2e tests). Update tests when modifying components.
+
+### Backend (Kotlin)
+- Write idiomatic Kotlin code. Favor immutable data structures (`val`), data classes, and extension functions where appropriate.
+- Follow standard Gradle conventions for dependencies and build configuration (`build.gradle.kts`).
+- Ensure test coverage. Add unit tests for new services or logic updates.
+
+## Workflow Rules
+- Do not remove existing code comments unless they are obsolete.
+- Add comments only for complex or non-obvious logic (focus on "why", not "what").
+- Do not introduce new third-party libraries without first checking if existing libraries in `package.json` or `build.gradle.kts` can achieve the goal.
+- Never expose or commit secrets, API keys, or sensitive environment variables. Always reference `.env` files.

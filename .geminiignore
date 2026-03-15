@@ -1,0 +1,18 @@
+# Exclude from Gemini/AI agent context to optimize performance and token usage
+.git/
+.idea/
+.vscode/
+.claude/
+.gradle/
+node_modules/
+.next/
+.swc/
+build/
+coverage/
+*.log
+*.class
+*.jar
+*.war
+.env
+.env.local
+.DS_Store
