@@ -211,7 +211,7 @@ jobs:
                   NEXT_PUBLIC_API_URL: http://localhost:8080/api
 
             - name: Run Playwright tests
-              run: npx playwright test
+              run: npx playwright test --ignore=e2e/prod-smoke.spec.ts
               env:
                   NEXT_PUBLIC_API_URL: http://localhost:8080/api
 
