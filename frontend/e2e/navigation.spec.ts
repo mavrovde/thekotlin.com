@@ -11,21 +11,22 @@ test.describe('Navigation', () => {
         await page.goto('/welcome');
 
         // Check all nav links exist
-        await expect(page.getByRole('link', { name: 'Welcome' }).first()).toBeVisible();
-        await expect(page.getByRole('link', { name: 'News' }).first()).toBeVisible();
-        await expect(page.getByRole('link', { name: 'Articles' }).first()).toBeVisible();
-        await expect(page.getByRole('link', { name: 'Forum' }).first()).toBeVisible();
-        await expect(page.getByRole('link', { name: 'Topics' }).first()).toBeVisible();
+        const nav = page.locator('nav');
+        await expect(nav.getByRole('link', { name: 'Welcome' })).toBeVisible();
+        await expect(nav.getByRole('link', { name: 'News' })).toBeVisible();
+        await expect(nav.getByRole('link', { name: 'Articles' })).toBeVisible();
+        await expect(nav.getByRole('link', { name: 'Forum' })).toBeVisible();
+        await expect(nav.getByRole('link', { name: 'Topics' })).toBeVisible();
 
         // Navigate to News
-        await page.getByRole('link', { name: 'News' }).first().click();
+        await nav.getByRole('link', { name: 'News' }).click();
         await page.waitForURL('**/news');
         expect(page.url()).toContain('/news');
     });
 
     test('footer links are present', async ({ page }) => {
         await page.goto('/welcome');
-        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await page.locator('footer').scrollIntoViewIfNeeded();
 
         await expect(page.locator('footer')).toBeVisible();
         await expect(page.locator('footer').getByText('Kotlin Official')).toBeVisible();

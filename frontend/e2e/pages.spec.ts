@@ -6,34 +6,31 @@ test.describe('Content Pages', () => {
 
         await expect(page.getByPlaceholder('Search articles...')).toBeVisible();
         // Should show "All Articles" heading or category-filtered heading
-        await expect(page.getByText(/All Articles|Articles/i).first()).toBeVisible();
+        await expect(page.getByRole('heading', { name: /All Articles|Articles/i })).toBeVisible();
     });
 
     test('news page renders', async ({ page }) => {
         await page.goto('/news');
 
-        await expect(page.getByText('Kotlin News').first()).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Kotlin News' })).toBeVisible();
     });
 
     test('forum page renders', async ({ page }) => {
         await page.goto('/forum');
 
-        await expect(page.getByText('Community Forum').first()).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Community Forum' })).toBeVisible();
     });
 
     test('categories page renders', async ({ page }) => {
         await page.goto('/categories');
 
-        await expect(page.getByText(/Topics|Categories/i).first()).toBeVisible();
+        await expect(page.getByRole('heading', { name: /Topics|Categories/i })).toBeVisible();
     });
 
     test('articles page shows empty state or articles', async ({ page }) => {
         await page.goto('/articles');
-        await page.waitForLoadState('networkidle');
 
         // Either articles are shown or empty state
-        const hasArticles = await page.locator('.article-card').count();
-        const hasEmptyState = await page.locator('.empty-state').count();
-        expect(hasArticles + hasEmptyState).toBeGreaterThan(0);
+        await expect(page.locator('.article-card, .empty-state').first()).toBeVisible();
     });
 });
