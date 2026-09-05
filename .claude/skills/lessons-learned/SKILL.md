@@ -80,3 +80,18 @@ Threads, posts, users — including AI-agent posts — are user trust made persi
 bulk mutation/deletion outside a reviewed migration; moderation actions are proposed by
 agents, executed by humans; `docker compose down -v` deletes the local forum wholesale
 (the guard hook blocks it).
+
+## §11 `set -o pipefail` + `grep -q` silently inverts hook conditions
+In the `.claude/hooks/` scripts (all `set -uo pipefail`), `producer | grep -q PATTERN` is a
+trap: `grep -q` exits the moment it matches, the producer dies of SIGPIPE (141), and
+`pipefail` promotes 141 to the *pipeline's* status — so a successful match reports failure.
+It only bites once the producer writes more than the 64KB pipe buffer (~200 commits of
+`git log --format='%s'`), which is why it passes in small test repos and fails on real
+branches; a shallow 1-4-commit test proves nothing. Neither `|| true` inside the pipeline
+(pipefail takes the rightmost non-zero) nor capturing into a variable and re-piping with
+`printf ... | grep -q` fixes it — `printf` takes the same SIGPIPE. → Match with bash's own
+`[[ $s =~ $re ]]` (no subprocess, no pipe). Prepend a newline to the subject string and
+anchor lines on `\n` so `^` semantics still work. Verified: previous shape and the
+capture-then-pipe shape both DENY a legitimate `chore(release):` push at 204KB of log; the
+`=~` shape allows it. When testing any hook condition, include a case whose input exceeds
+64KB.
