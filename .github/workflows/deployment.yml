@@ -358,7 +358,7 @@ jobs:
                 docker compose -f docker-compose.prod.yml up -d
                 sleep 15
             - name: Run Tests
-              run: npx playwright test smoke/prod-smoke.spec.ts
+              run: PROD_SMOKE=1 npx playwright test --project=prod-smoke
               working-directory: frontend
             - name: Teardown
               if: always()
