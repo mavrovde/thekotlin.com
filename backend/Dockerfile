@@ -1,5 +1,5 @@
 # ── Build ──
-FROM eclipse-temurin:21-jdk AS build
+FROM eclipse-temurin:26-jdk AS build
 WORKDIR /app
 
 COPY gradlew settings.gradle.kts build.gradle.kts ./
@@ -10,7 +10,7 @@ COPY src ./src
 RUN ./gradlew bootJar --no-daemon -x test
 
 # ── Run ──
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:26-jre
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
 

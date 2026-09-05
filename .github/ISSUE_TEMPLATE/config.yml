@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 🏛️ Found the door? (co-creators & curious minds)
+    url: https://github.com/mavrovde/thekotlin.com/blob/main/CONTRIBUTING.md#the-door
+    about: If a certain README comment sent you here — this is the way in.
+  - name: 🔐 Report a security vulnerability
+    url: https://github.com/mavrovde/thekotlin.com/security/advisories/new
+    about: Please report vulnerabilities privately, never as a public issue.

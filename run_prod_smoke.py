@@ -3,9 +3,9 @@ import subprocess
 import time
 import sys
 
-def run_cmd(cmd, check=True):
+def run_cmd(cmd, check=True, env=None):
     print(f"Executing: {' '.join(cmd) if isinstance(cmd, list) else cmd}")
-    result = subprocess.run(cmd, shell=isinstance(cmd, str))
+    result = subprocess.run(cmd, shell=isinstance(cmd, str), env=env)
     if check and result.returncode != 0:
         print(f"❌ Command failed with exit code {result.returncode}")
         sys.exit(result.returncode)
@@ -23,11 +23,11 @@ def generate_ssl():
         ])
 
 def start_stack():
-    print("🚀 Bringing up the production Docker Compose stack (v0.1.1)...")
     env = os.environ.copy()
     env["IMAGE_TAG"] = os.environ.get("IMAGE_TAG", "latest")
+    print(f"🚀 Bringing up the production Docker Compose stack (IMAGE_TAG={env['IMAGE_TAG']})...")
     subprocess.run(
-        ["docker-compose", "-f", "docker-compose.prod.yml", "up", "-d"],
+        ["docker", "compose", "-f", "docker-compose.prod.yml", "up", "-d"],
         env=env,
         check=True
     )
@@ -40,13 +40,18 @@ def run_tests():
     original_cwd = os.getcwd()
     os.chdir("frontend")
     try:
-        run_cmd(["npx", "playwright", "test", "smoke/prod-smoke.spec.ts"])
+        # The spec lives in frontend/e2e/ and is gated behind the PROD_SMOKE project so the
+        # default `npx playwright test` run never tries to reach the :20443 nginx stack.
+        run_cmd(
+            ["npx", "playwright", "test", "--project=prod-smoke"],
+            env={**os.environ, "PROD_SMOKE": "1"},
+        )
     finally:
         os.chdir(original_cwd)
 
 def cleanup():
     print("🧹 Cleaning up...")
-    run_cmd(["docker-compose", "-f", "docker-compose.prod.yml", "down"])
+    run_cmd(["docker", "compose", "-f", "docker-compose.prod.yml", "down"])
 
 def main():
     generate_ssl()

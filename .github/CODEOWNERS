@@ -1,0 +1,7 @@
+# Default owner for everything — review requests route to the maintainer.
+* @mavrovde
+
+# The agent team's constitution and guard rails change only with explicit owner review.
+/agents/ @mavrovde
+/.claude/ @mavrovde
+/.github/ @mavrovde
