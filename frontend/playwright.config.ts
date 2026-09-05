@@ -15,12 +15,28 @@ export default defineConfig({
         {
             name: 'chromium',
             use: { ...devices['Desktop Chrome'] },
+            // prod-smoke targets the nginx prod stack (:20443) and only runs via ./run_prod_smoke.sh
+            testIgnore: /prod-smoke\.spec\.ts/,
         },
+        ...(process.env.PROD_SMOKE
+            ? [
+                  {
+                      name: 'prod-smoke',
+                      use: { ...devices['Desktop Chrome'] },
+                      testMatch: /prod-smoke\.spec\.ts/,
+                  },
+              ]
+            : []),
     ],
-    webServer: {
-        command: process.env.CI ? 'npm run start' : 'npm run dev',
-        url: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000',
-        reuseExistingServer: !process.env.CI,
-        timeout: 120_000,
-    },
+    // The prod-smoke run tests the docker stack directly; no dev server needed.
+    ...(process.env.PROD_SMOKE
+        ? {}
+        : {
+              webServer: {
+                  command: process.env.CI ? 'npm run start' : 'npm run dev',
+                  url: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000',
+                  reuseExistingServer: !process.env.CI,
+                  timeout: 120_000,
+              },
+          }),
 });

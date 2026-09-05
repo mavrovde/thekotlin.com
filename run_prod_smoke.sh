@@ -15,7 +15,7 @@ sleep 15
 
 echo "🧪 Running Production Smoke Tests..."
 cd frontend
-npx playwright test e2e/prod-smoke.spec.ts
+PROD_SMOKE=1 npx playwright test --project=prod-smoke
 
 echo "🧹 Cleaning up..."
 cd ..
