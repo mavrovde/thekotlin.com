@@ -3,7 +3,8 @@
 *.iml
 .vscode/
 .air/
-.claude/
+.claude/settings.local.json
+.claude/worktrees/
 
 # Build
 backend/build/
