@@ -8,7 +8,7 @@ plugins {
 
 allprojects {
     group = "com.thekotlin"
-    version = "1.0.13"
+    version = "1.1.0"
 
     repositories {
         mavenCentral()
