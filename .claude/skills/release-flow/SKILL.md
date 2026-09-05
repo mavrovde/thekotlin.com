@@ -15,9 +15,13 @@ Never hand-edit `version` in `build.gradle.kts` (the pre-push hook blocks it out
 ## What release.py does (read it — 90 lines)
 1. `python3 manage.py stop` — takes down your local compose stack.
 2. Bumps `version = "X.Y.Z"` in root `build.gradle.kts`.
-3. `git add` of a **hardcoded, partly stale file list** (§3 of lessons-learned) — run only
-   on an otherwise-clean tree.
+3. `git add build.gradle.kts` — only the bumped file. (It used to stage a hardcoded, partly
+   stale list; §3 of lessons-learned has the history.) Still run only on an otherwise-clean
+   tree — the release commit should contain the bump and nothing else.
 4. Commits `chore(release): vX.Y.Z`, tags `vX.Y.Z`, pushes `main` + tags.
+
+`--patch`/`--minor`/`--major` is REQUIRED; with no argument the script prints usage and
+exits 1 without touching anything.
 
 ## What the tag triggers
 `.github/workflows/deployment.yml` on `v*.*.*`: backend/frontend/admin CI → Playwright e2e
