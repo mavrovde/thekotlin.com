@@ -50,12 +50,13 @@ fail_leg() {
 #      tolerate leading whitespace — `^\+version` never matches `+    version = "..."`.
 #   2. NEVER feed these strings into `grep -q` through a PIPE. `grep -q` exits on first
 #      match; whatever is upstream then dies of SIGPIPE (141) and `set -o pipefail` promotes
-#      that 141 to the pipeline's status, inverting the condition. This bites once the
-#      upstream output exceeds the 64KB pipe buffer (~200 commits), so it hides in small
-#      test repos and appears on real branches. Capturing into a variable is NOT sufficient
-#      either — `printf ... | grep -q` takes the same SIGPIPE. Match with bash's own `=~`
-#      instead: no subprocess, no pipe, nothing to signal.
+#      that 141 to the pipeline's status, inverting the condition. There is no safe size:
+#      a forked producer like `git log` inverts from ~13 commits / ~585 bytes, while a
+#      builtin `printf` only fails past the 64KB pipe buffer — so capturing into a variable
+#      and re-piping is NOT a fix either. It is a race; a passing case proves nothing.
+#      Match with bash's own `=~`: no subprocess, no pipe, nothing to signal.
 #      Both strings get a leading newline so `\n` anchors every line, including the first.
+#      Regression test: .claude/hooks/tests/version-guard-matrix.sh (see lessons-learned §11).
 if [ "$PREPUSH_GUARD_VERSION" = "1" ]; then
   VERSION_DIFF="$(git -C "$ROOT" diff origin/main...HEAD -- build.gradle.kts 2>/dev/null || true)"
   BRANCH_SUBJECTS="$(git -C "$ROOT" log origin/main..HEAD --format='%s' 2>/dev/null || true)"

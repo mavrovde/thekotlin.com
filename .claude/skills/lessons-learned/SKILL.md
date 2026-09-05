@@ -85,13 +85,26 @@ agents, executed by humans; `docker compose down -v` deletes the local forum who
 In the `.claude/hooks/` scripts (all `set -uo pipefail`), `producer | grep -q PATTERN` is a
 trap: `grep -q` exits the moment it matches, the producer dies of SIGPIPE (141), and
 `pipefail` promotes 141 to the *pipeline's* status — so a successful match reports failure.
-It only bites once the producer writes more than the 64KB pipe buffer (~200 commits of
-`git log --format='%s'`), which is why it passes in small test repos and fails on real
-branches; a shallow 1-4-commit test proves nothing. Neither `|| true` inside the pipeline
-(pipefail takes the rightmost non-zero) nor capturing into a variable and re-piping with
-`printf ... | grep -q` fixes it — `printf` takes the same SIGPIPE. → Match with bash's own
-`[[ $s =~ $re ]]` (no subprocess, no pipe). Prepend a newline to the subject string and
-anchor lines on `\n` so `^` semantics still work. Verified: previous shape and the
-capture-then-pipe shape both DENY a legitimate `chore(release):` push at 204KB of log; the
-`=~` shape allows it. When testing any hook condition, include a case whose input exceeds
-64KB.
+
+**The rule is unconditional: never put `grep -q` downstream of anything under `pipefail`.**
+There is no safe size. Measured on this repo's pattern, the threshold depends on what kind
+of producer it is, and for a forked one it is tiny:
+
+| producer                        | inverts from            |
+|---------------------------------|-------------------------|
+| `git log --format='%s'` (forked)| ~13 commits / ~585 bytes|
+| `printf '%s\n' "$var"` (builtin)| only past 64KB          |
+
+A forked producer is still mid-run when `grep -q` closes the pipe, so size barely matters;
+a shell builtin writes one blob and only fails past the pipe buffer. This is a *race*, so
+results vary by machine and run — a case that passes proves nothing.
+
+Neither `|| true` inside the pipeline (pipefail takes the rightmost non-zero) nor capturing
+into a variable and re-piping with `printf ... | grep -q` fixes it. → Match with bash's own
+`[[ $s =~ $re ]]` — no subprocess, no pipe, nothing to signal. Prepend a newline to the
+subject string and anchor the regex on `\n` so per-line `^` semantics still work.
+
+Verified: at 204KB of log, the old shape AND the capture-then-pipe shape both DENY a
+legitimate `chore(release):` push; the `=~` shape allows it. Regression test:
+`.claude/hooks/tests/version-guard-matrix.sh` (9 cases; it catches both broken shapes).
+When testing a hook condition, include both a small forked-producer case and a >64KB one.

@@ -32,6 +32,10 @@ fresh_clone() {
   git remote remove origin; git remote add origin "$SRC"
   git fetch -q origin main:refs/remotes/origin/main
   git checkout -q -B t origin/main
+  # Never rely on ambient git identity — a clone inherits neither local nor (necessarily)
+  # global user config, and the fat-commit cases would die with "Author identity unknown".
+  git config user.email t@t
+  git config user.name t
   mkdir -p .claude/hooks
   cp "$HOOK_SRC" .claude/hooks/pre-push-gate.sh
 }
@@ -68,7 +72,7 @@ check() { # label expected actual extra
 # 200 commits with ~1KB subjects => git log output far exceeds the 64KB pipe buffer.
 many_fat_commits() {
   local pad; pad=$(printf 'x%.0s' $(seq 1 1000))
-  local i; for i in $(seq 1 200); do git commit -q --allow-empty -m "chore: ordinary $i $pad"; done
+  local i; for i in $(seq 1 200); do gc --allow-empty -m "chore: ordinary $i $pad"; done
 }
 
 echo "=============== pre-push version guard: acceptance matrix ==============="
