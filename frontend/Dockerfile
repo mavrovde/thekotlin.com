@@ -1,11 +1,11 @@
 # ── Dependencies ──
-FROM node:20-alpine AS deps
+FROM node:26-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
 # ── Build ──
-FROM node:20-alpine AS build
+FROM node:26-alpine AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -23,7 +23,7 @@ ENV NEXT_PUBLIC_GTM_ID=$NEXT_PUBLIC_GTM_ID
 RUN npm run build
 
 # ── Run ──
-FROM node:20-alpine
+FROM node:26-alpine
 WORKDIR /app
 
 COPY --from=build /app/.next/standalone ./
