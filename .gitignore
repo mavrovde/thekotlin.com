@@ -3,38 +3,49 @@
 *.iml
 .vscode/
 .air/
+
+# Claude Code (team config IS tracked; only personal/transient state is ignored)
 .claude/settings.local.json
 .claude/worktrees/
 
-# Build
-backend/build/
+# Build output
+build/
 backend/bin/
-frontend/.next/
-frontend/node_modules/
-admin/.next/
-admin/node_modules/
+.next/
+out/
+node_modules/
+next-env.d.ts
+*.tsbuildinfo
 
-# Gradle
+# Gradle & Kotlin
 .gradle/
-backend/.gradle/
+.kotlin/
 
-# Environment
-.env
-.env.local
-!.env.local.example
-!.env*.example
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Playwright & E2E Testing
+# Test output
+coverage/
 frontend/playwright-report/
 frontend/test-results/
 frontend/blob-report/
 .playwright/
 
+# Environment (examples stay tracked)
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.local.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+gh_logs*.txt
+
+# OS
+.DS_Store
+Thumbs.db
+
 # Local Development & Scripts
 ssl/
 nginx/ssl/
-gh_logs*.txt
