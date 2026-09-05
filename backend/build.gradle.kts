@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     id("org.springframework.boot")
     id("io.spring.dependency-management")
@@ -10,14 +8,20 @@ plugins {
 }
 
 group = "com.thekotlin"
-version = "0.1.1"
 
 repositories {
     mavenCentral()
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
+kotlin {
+    jvmToolchain(26)
+    compilerOptions {
+        freeCompilerArgs.add("-Xjsr305=strict")
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.15"
 }
 
 dependencies {
@@ -34,6 +38,7 @@ dependencies {
     // Database
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
 
     // JWT
     implementation("io.jsonwebtoken:jjwt-api:+")
@@ -45,13 +50,6 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("io.mockk:mockk:+")
     testImplementation("com.h2database:h2")
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs += "-Xjsr305=strict"
-        jvmTarget = "21"
-    }
 }
 
 tasks.withType<Test> {
