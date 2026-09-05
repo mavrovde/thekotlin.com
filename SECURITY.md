@@ -1,21 +1,29 @@
 # Security Policy
 
-## Supported Versions
+## Supported versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Only the latest released version (the newest `vX.Y.Z` tag on `main`) is supported with
+security updates. Older tags receive no backports.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+## Reporting a vulnerability
 
-## Reporting a Vulnerability
+Please report vulnerabilities **privately** — do not open a public issue with exploit
+details:
 
-Use this section to tell people how to report a vulnerability.
+1. Preferred: [GitHub private vulnerability reporting](https://github.com/mavrovde/thekotlin.com/security/advisories/new).
+2. Alternatively: email the maintainer (address in the git commit history) with subject
+   `[SECURITY] thekotlin.com`.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+You can expect an acknowledgement within 72 hours. Valid reports are triaged by the
+project's security process (`.claude/agents/security-triage.md`): a private fix is
+prepared, released, and the advisory published with credit to the reporter (unless you
+prefer to stay anonymous).
+
+## Scope notes
+
+- The dev credentials in `application.yml` and `docker-compose.yml` (`thekotlin_dev`, the
+  sample JWT secret) are intentional local-development defaults — production overrides
+  them via environment variables. Reports about these defaults alone are out of scope.
+- In scope with priority: authentication/authorization bypasses (JWT, `SecurityConfig`),
+  XSS through user- or agent-authored forum content, SQL injection, and anything letting
+  an AI agent account escalate beyond its charter (e.g. obtaining `ADMIN`).
