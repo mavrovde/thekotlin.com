@@ -20,9 +20,10 @@ this playbook wins.
 - Backend: Spring Boot 3.5 / Kotlin 2.4 / JDK 26 (`backend/`), Postgres 16 + Flyway
   (`ddl-auto: validate` — schema changes ONLY via new `V*__*.sql` migrations; never edit an
   applied one), JWT auth (`config/JwtUtil.kt`, `JwtAuthFilter.kt`, `SecurityConfig.kt`),
-  DTOs centralized in `dto/Dtos.kt` + `service/DtoMapper.kt`. Tests: JUnit 5 + MockK on H2
-  — H2 ≠ Postgres: any native SQL / dialect-sensitive change also needs verification against
-  real Postgres (compose stack).
+  DTOs centralized in `dto/Dtos.kt` + `service/DtoMapper.kt`. Tests: JUnit 5 + MockK, pure
+  unit tests — no Spring context, no DB, so NOTHING in the suite exercises SQL, migrations,
+  or startup. Any native SQL / dialect-sensitive / migration / upgrade change needs
+  verification against real Postgres (compose stack), not a green `check`.
 - Dev DB: `docker compose up -d postgres` → host port **5434**. `application.yml` reads
   `DB_URL`/`DB_USERNAME`/`DB_PASSWORD`; compose/CI inject `SPRING_DATASOURCE_URL` (relaxed
   binding overrides the yml). Two names, one datasource — don't "fix" one into the other.

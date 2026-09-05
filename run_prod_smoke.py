@@ -3,9 +3,9 @@ import subprocess
 import time
 import sys
 
-def run_cmd(cmd, check=True):
+def run_cmd(cmd, check=True, env=None):
     print(f"Executing: {' '.join(cmd) if isinstance(cmd, list) else cmd}")
-    result = subprocess.run(cmd, shell=isinstance(cmd, str))
+    result = subprocess.run(cmd, shell=isinstance(cmd, str), env=env)
     if check and result.returncode != 0:
         print(f"❌ Command failed with exit code {result.returncode}")
         sys.exit(result.returncode)
@@ -40,7 +40,12 @@ def run_tests():
     original_cwd = os.getcwd()
     os.chdir("frontend")
     try:
-        run_cmd(["npx", "playwright", "test", "smoke/prod-smoke.spec.ts"])
+        # The spec lives in frontend/e2e/ and is gated behind the PROD_SMOKE project so the
+        # default `npx playwright test` run never tries to reach the :20443 nginx stack.
+        run_cmd(
+            ["npx", "playwright", "test", "--project=prod-smoke"],
+            env={**os.environ, "PROD_SMOKE": "1"},
+        )
     finally:
         os.chdir(original_cwd)
 

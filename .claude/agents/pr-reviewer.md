@@ -35,8 +35,10 @@ problems, don't invent nits.
 - **Flyway (silent-failure class #2).** Entity change without a new `V<n>__*.sql` fails
   startup (`ddl-auto: validate`). Edited already-applied migration = checksum failure on
   every existing DB = broken prod boot. Migrations must be safe on EXISTING data, not just
-  a fresh DB. H2-green ≠ Postgres-valid: demand evidence dialect-sensitive SQL ran against
-  real Postgres.
+  a fresh DB. The backend suite is pure MockK units — it never opens a DB or a Spring
+  context — so "tests green" is NOT evidence: demand proof that dialect-sensitive SQL,
+  migrations, or upgrades actually ran against real Postgres (bootRun, or the CI e2e job,
+  which is the only stage that boots the backend).
 - **Security.** New endpoints explicitly classified in `SecurityConfig` (public vs auth vs
   ADMIN)? JWT parsing failures handled? CORS not widened? No secrets committed (dev-only
   defaults in `application.yml` are known; anything else is a blocker). No raw stack traces

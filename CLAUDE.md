@@ -35,7 +35,11 @@ cd admin && npm install && npm run dev      # :3001
 ./gradlew check                      # required green before pushing
 ```
 
-Tests use JUnit 5 + MockK; H2 substitutes for Postgres in tests.
+Tests are JUnit 5 + MockK **pure unit tests** — no Spring context, no database. There are no
+`@SpringBootTest`/`@DataJpaTest`/`@WebMvcTest` tests and no `src/test/resources/`, so a green
+suite proves compilation and service logic only: it does not prove the app boots, that Flyway
+migrations apply, or that any SQL is valid. Verify those against real Postgres (see below).
+The declared `com.h2database:h2` test dependency is currently unused.
 
 ### Frontend / Admin (run from `frontend/` or `admin/`)
 

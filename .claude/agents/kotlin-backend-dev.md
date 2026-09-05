@@ -38,10 +38,12 @@ sloppy Kotlin here is a public embarrassment, not just a bug.
 ## Reproduce & verify (from `backend/`)
 - Full suite as CI runs it: `./gradlew check` (JUnit 5 + MockK, jacoco).
 - One test: `./gradlew test --tests "com.thekotlin.service.ArticleServiceTest"`.
-- ⚠️ **Tests run on H2, prod runs Postgres.** Any native query, dialect-sensitive SQL, or
-  new migration must ALSO be verified against real Postgres:
-  `docker compose up -d postgres && ./gradlew bootRun` and hit the endpoint. A green H2
-  suite proves nothing about a Postgres-only syntax error in `V<n>__*.sql`.
+- ⚠️ **The suite never touches a DB.** Every backend test is a pure MockK unit test — no
+  Spring context, no H2, no `src/test/resources/`. Any native query, dialect-sensitive SQL,
+  new migration, or dependency bump must ALSO be verified against real Postgres:
+  `docker compose up -d postgres && ./gradlew bootRun` and hit the endpoint. A green
+  `check` proves nothing about a Postgres-only syntax error in `V<n>__*.sql`, nor that the
+  app still boots.
 - Signature/behavior change ⇒ root `./gradlew check` (covers frontend/admin npm tests via
   the Gradle-npm glue) — a DTO rename breaks `api.ts` interfaces and Jest mocks you didn't edit.
 

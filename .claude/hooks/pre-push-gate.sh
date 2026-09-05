@@ -45,14 +45,12 @@ fail_leg() {
 }
 
 # --- Version guard: version changes must come from release.py, not by hand ----
+# The version lives indented inside `allprojects { }`, so the added-line anchor
+# must tolerate leading whitespace — `^\+version` would never match it.
 if [ "$PREPUSH_GUARD_VERSION" = "1" ]; then
-  if git -C "$ROOT" diff --cached origin/main...HEAD -- build.gradle.kts 2>/dev/null | grep -qE '^\+version' || \
-     git -C "$ROOT" log origin/main..HEAD --format='%s' -- build.gradle.kts 2>/dev/null | grep -q . ; then
-    # Only block when a version line changed outside a release commit.
-    if git -C "$ROOT" diff origin/main...HEAD -- build.gradle.kts 2>/dev/null | grep -qE '^\+version[[:space:]]*=' && \
-       ! git -C "$ROOT" log origin/main..HEAD --format='%s' 2>/dev/null | grep -qE '^chore\(release\):'; then
-      fail_leg "version guard — build.gradle.kts version changed outside a chore(release) commit; use ./release.py"
-    fi
+  if git -C "$ROOT" diff origin/main...HEAD -- build.gradle.kts 2>/dev/null | grep -qE '^\+[[:space:]]*version[[:space:]]*=' && \
+     ! git -C "$ROOT" log origin/main..HEAD --format='%s' 2>/dev/null | grep -qE '^chore\(release\):'; then
+    fail_leg "version guard — build.gradle.kts version changed outside a chore(release) commit; use ./release.py"
   fi
 fi
 

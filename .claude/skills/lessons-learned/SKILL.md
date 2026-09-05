@@ -13,11 +13,17 @@ description: >-
 
 Each entry: **the trap → why it bites → how to apply.**
 
-## §1 H2-green ≠ Postgres-valid
-Backend tests run on H2; prod runs Postgres 16. Native queries, dialect-sensitive SQL, and
-every Flyway migration can pass the whole suite and fail the real DB. → Any such change is
-additionally verified against real Postgres: `docker compose up -d postgres` (host **5434**),
-`./gradlew bootRun` (Flyway validates on startup), hit the endpoint.
+## §1 The backend suite never touches a database at all
+Stronger than the old "H2 ≠ Postgres" framing, and verified: there are **zero**
+`@SpringBootTest`/`@DataJpaTest`/`@WebMvcTest`/`@ActiveProfiles` tests and no
+`backend/src/test/resources/`. Every backend test is a pure JUnit 5 + MockK unit test with
+mocked repositories; the declared `com.h2database:h2` dependency is unused. So a green
+`./gradlew check` proves compilation and service logic — never that the app boots, that
+Flyway migrations apply, or that any SQL parses. Native queries, dialect-sensitive SQL,
+migrations, and Spring/Hibernate/Flyway version bumps all pass the suite and fail the real
+DB. → Verify such changes against real Postgres: `docker compose up -d postgres`
+(host **5434**), `./gradlew bootRun` (Flyway + `ddl-auto: validate` run on startup), hit
+the endpoint. In CI, the e2e job is the only stage that actually boots the backend.
 
 ## §2 Two names, one datasource
 `application.yml` reads `DB_URL`/`DB_USERNAME`/`DB_PASSWORD` (default `localhost:5434`);
@@ -25,12 +31,14 @@ docker-compose and CI inject `SPRING_DATASOURCE_URL`/`_USERNAME`/`_PASSWORD`, wh
 relaxed binding lets override `spring.datasource.*` directly. Both are live paths. → Don't
 "unify" one into the other casually; changing either set breaks a different environment.
 
-## §3 release.py stages a hardcoded stale file list
-`release.py` runs `git add` on a fixed list (`V2__news.sql`, two e2e specs, `deployment.yml`,
-`manage.py`, …) left over from an old release. → Run it ONLY on a clean tree; anything
-unrelated sitting modified gets swallowed into the release commit. It also runs
-`manage.py stop` first — your local stack goes down. Version bumps happen ONLY through this
-script (pre-push hook enforces: version changes outside `chore(release):` commits are blocked).
+## §3 release.py stages, stops your stack, and owns the version
+It used to `git add` a hardcoded stale file list (`V2__news.sql`, two e2e specs,
+`deployment.yml`, `manage.py`, …) left over from an old release, silently swallowing
+unrelated edits to those paths; it now stages only `build.gradle.kts`. → Still run it ONLY
+on a clean tree — the commit is meant to contain the bump and nothing else. It also runs
+`manage.py stop` first, so your local stack goes down. Version bumps happen ONLY through
+this script; the pre-push hook blocks a version change outside a `chore(release):` commit
+(its anchor must tolerate the leading indent — `version` sits inside `allprojects { }`).
 
 ## §4 Tagged ≠ deployed
 `./release.py` pushing a `v*` tag only *starts* `deployment.yml`; green Stage 3 means images
